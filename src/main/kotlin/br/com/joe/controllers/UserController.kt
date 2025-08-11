@@ -25,8 +25,8 @@ class UserController {
 
     @GetMapping
     fun listUsers(): ResponseEntity<List<User>>{
-        val usuarios = service.listar()
-        return ResponseEntity.ok(usuarios)
+        val users = service.findAllUsers()
+        return ResponseEntity.ok(users)
     }
 
 }

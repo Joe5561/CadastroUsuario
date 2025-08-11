@@ -16,7 +16,7 @@ class UserService {
         return repository.save(user)
     }
 
-    fun listar(): List<User>{
+    fun findAllUsers(): List<User>{
         val users = repository.findAll()
         if (users.isEmpty()){
             throw ResourceNotFoundException("No user found!!!")
