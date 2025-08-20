@@ -2,6 +2,7 @@ package br.com.joe.service
 
 import br.com.joe.entity.User
 import br.com.joe.exception.ResourceNotFoundException
+import br.com.joe.exception.UserNotFoundException
 import br.com.joe.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -24,4 +25,12 @@ class UserService {
         return users
     }
 
+    fun findByEmail(email: String): User?{
+        val usuario =  repository.findByEmail(email)
+        if (usuario != null){
+            return usuario
+        }else{
+            throw UserNotFoundException("User not found for this $email")
+        }
+    }
 }
