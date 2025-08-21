@@ -13,24 +13,42 @@ class UserService {
     @Autowired
     private lateinit var repository: UserRepository
 
-    fun save(user: User): User{
+    fun save(user: User): User {
         return repository.save(user)
     }
 
-    fun findAllUsers(): List<User>{
+    fun findAllUsers(): List<User> {
         val users = repository.findAll()
-        if (users.isEmpty()){
+        if (users.isEmpty()) {
             throw ResourceNotFoundException("No user found!!!")
         }
         return users
     }
 
-    fun findByEmail(email: String): User?{
-        val usuario =  repository.findByEmail(email)
-        if (usuario != null){
-            return usuario
-        }else{
+    fun findByName(name: String): User? {
+        val user = repository.findByName(name)
+        if (user != null) {
+            return user
+        } else {
+            throw UserNotFoundException("User not found for this $name")
+        }
+    }
+
+    fun findByEmail(email: String): User? {
+        val user = repository.findByEmail(email)
+        if (user != null) {
+            return user
+        } else {
             throw UserNotFoundException("User not found for this $email")
+        }
+    }
+
+    fun deleteUser(id: Int){
+        val user = repository.findById(id)
+        if (user.isPresent){
+            repository.deleteById(id)
+        }else{
+            throw UserNotFoundException("User not found for this $id")
         }
     }
 }
