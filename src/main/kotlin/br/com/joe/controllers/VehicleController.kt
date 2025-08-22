@@ -1,0 +1,28 @@
+package br.com.joe.controllers
+
+import br.com.joe.entity.Vehicle
+import br.com.joe.service.VehicleService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+@RequestMapping("/vehicle")
+@Tag(name = "Vehicle", description = "Operações relacionadas a veiculos")
+class VehicleController {
+
+    @Autowired
+    private lateinit var service: VehicleService
+
+    @PostMapping
+    @Operation(summary = "Cadastrar veiculos", description = "Efetuar o cadastro de veiculos")
+    fun saveVehicle(@RequestBody vehicle: Vehicle): ResponseEntity<Vehicle>{
+        val vehicleSave = service.save(vehicle)
+        return ResponseEntity.ok().body(vehicleSave)
+    }
+}

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/user")
-@Tag(name = "Usuários", description = "Operações relacionadas a usuários")
+@Tag(name = "Users", description = "Operações relacionadas a usuários")
 class UserController {
 
     @Autowired
@@ -53,6 +53,7 @@ class UserController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Deletar usuários")
     fun deleteUser(@PathVariable id: Int){
         service.deleteUser(id)
     }
