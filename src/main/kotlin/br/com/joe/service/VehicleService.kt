@@ -1,7 +1,6 @@
 package br.com.joe.service
 
 import br.com.joe.entity.Vehicle
-import br.com.joe.exception.ResourceNotFoundException
 import br.com.joe.exception.VehicleNotFoundException
 import br.com.joe.repository.VehicleRepository
 import org.springframework.beans.factory.annotation.Autowired

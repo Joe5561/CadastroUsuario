@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -24,5 +25,12 @@ class VehicleController {
     fun saveVehicle(@RequestBody vehicle: Vehicle): ResponseEntity<Vehicle>{
         val vehicleSave = service.save(vehicle)
         return ResponseEntity.ok().body(vehicleSave)
+    }
+
+    @GetMapping
+    @Operation(summary = "Buscar todos os veículos")
+    fun listVehicle(): ResponseEntity<List<Vehicle>>{
+        val vehicles = service.findAllVehicle()
+        return ResponseEntity.ok().body(vehicles)
     }
 }
