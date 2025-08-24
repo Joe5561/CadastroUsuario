@@ -20,7 +20,7 @@ class UserService {
     fun findAllUsers(): List<User> {
         val users = repository.findAll()
         if (users.isEmpty()) {
-            throw ResourceNotFoundException("No user found!!!")
+            throw UserNotFoundException("No user found!!!")
         }
         return users
     }
