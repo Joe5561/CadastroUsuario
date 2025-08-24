@@ -43,6 +43,14 @@ class UserService {
         }
     }
 
+    fun findByCpf(cpf: String): User{
+        val user = repository.findByCpf(cpf)
+        if (user.cpf.isEmpty()){
+            throw UserNotFoundException("User not found for this $cpf")
+        }
+        return user
+    }
+
     fun deleteUser(id: Int){
         val user = repository.findById(id)
         if (user.isPresent){
@@ -50,5 +58,14 @@ class UserService {
         }else{
             throw UserNotFoundException("User not found for this $id")
         }
+    }
+
+    fun atualizarEmail(cpf: String, novoEmail: String): User{
+        val user = repository.findByCpf(cpf)
+        if (user.cpf.isEmpty()){
+            throw UserNotFoundException("User not found for this $cpf")
+        }
+        user.email = novoEmail
+        return repository.save(user)
     }
 }

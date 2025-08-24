@@ -4,11 +4,13 @@ import br.com.joe.entity.User
 import br.com.joe.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Payload
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -49,6 +51,18 @@ class UserController {
     @Operation(summary = "Busca por nome", description = "Efetua a busca pelo nome")
     fun findByName(@RequestParam name: String): User?{
         return service.findByName(name)
+    }
+
+    @PatchMapping("/email")
+    @Operation(summary = "Atualizar email")
+    fun atualizarEmmail(@RequestParam cpf: String,@RequestParam novoEmail: String): User {
+        return service.atualizarEmail(cpf, novoEmail)
+    }
+
+    @GetMapping("/cpf")
+    @Operation(summary = "Buscar por cpf")
+    fun findByCpf(@RequestParam cpf: String): User{
+        return service.findByCpf(cpf)
     }
 
     @DeleteMapping("/{id}")

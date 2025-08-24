@@ -15,13 +15,16 @@ data class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @Column(name = "nome")
+    @Column(name = "nome", nullable = false)
     var name: String = "",
 
-    @Column(name = "email")
+    @Column(name = "cpf", nullable = false)
+    var cpf: String = "",
+
+    @Column(name = "email", nullable = false)
     var email: String = "",
 
-    @Column(name = "address")
+    @Column(name = "address", nullable = false)
     var address: String = ""
 
 )
