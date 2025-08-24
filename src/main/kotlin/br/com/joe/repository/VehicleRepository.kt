@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface VehicleRepository: JpaRepository<Vehicle, Long> {
-    fun findByPlaca(placa: String): Vehicle?
+    fun findByPlaca(placa: String): Vehicle
     fun deleteByPlaca(placa: String): Vehicle
 }

@@ -1,7 +1,6 @@
 package br.com.joe.service
 
 import br.com.joe.entity.User
-import br.com.joe.exception.ResourceNotFoundException
 import br.com.joe.exception.UserNotFoundException
 import br.com.joe.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired

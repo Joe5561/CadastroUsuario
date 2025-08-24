@@ -15,15 +15,15 @@ data class Vehicle(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @Column(name = "modelo")
+    @Column(name = "modelo", nullable = false)
     var modelo: String = "",
 
-    @Column(name = "marca")
+    @Column(name = "marca", nullable = false)
     var marca: String = "",
 
-    @Column(name = "ano")
+    @Column(name = "ano", nullable = false)
     var ano: String = "",
 
-    @Column(name = "placa")
+    @Column(name = "placa", nullable = false)
     var placa: String = ""
 )
