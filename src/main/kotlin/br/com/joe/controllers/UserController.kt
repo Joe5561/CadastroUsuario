@@ -65,6 +65,12 @@ class UserController {
         return service.findByCpf(cpf)
     }
 
+    @DeleteMapping("/cpf")
+    @Operation(summary = "Deletar usuário por cpf")
+    fun deleteByCpf(@RequestParam cpf: String): User{
+        return service.deleteByCpf(cpf)
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Deletar usuários")

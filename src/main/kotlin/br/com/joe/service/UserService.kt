@@ -44,10 +44,10 @@ class UserService {
 
     fun findByCpf(cpf: String): User{
         val user = repository.findByCpf(cpf)
-        if (user.cpf.isEmpty()){
-            throw UserNotFoundException("User not found for this $cpf")
+        if (user != null){
+            return user
         }
-        return user
+        throw UserNotFoundException("User not found for this $cpf")
     }
 
     fun deleteUser(id: Int){
@@ -59,12 +59,20 @@ class UserService {
         }
     }
 
+    fun deleteByCpf(cpf: String): User{
+        val user = repository.findByCpf(cpf)
+            ?: throw UserNotFoundException("User not found for this $cpf")
+        repository.delete(user)
+        return user
+    }
+
     fun atualizarEmail(cpf: String, novoEmail: String): User{
         val user = repository.findByCpf(cpf)
-        if (user.cpf.isEmpty()){
+        if (user != null){
+            user.email = novoEmail
+            return repository.save(user)
+        }else{
             throw UserNotFoundException("User not found for this $cpf")
         }
-        user.email = novoEmail
-        return repository.save(user)
     }
 }
