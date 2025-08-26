@@ -34,12 +34,9 @@ class VehicleService {
     }
 
     fun deleteByPlaca(placa: String): Vehicle?{
-        val vehicle = findByPlaca(placa)
-        if (vehicle.placa.isNotEmpty()){
-            repository.deleteByPlaca(placa)
-        }else{
-            throw VehicleNotFoundException("Vehicle not found for this $placa")
-        }
+        val vehicle = repository.findByPlaca(placa)
+            ?: throw VehicleNotFoundException("Vehicle not found for this $placa")
+        repository.delete(vehicle)
         return vehicle
     }
 }
