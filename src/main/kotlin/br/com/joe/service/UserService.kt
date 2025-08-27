@@ -1,7 +1,6 @@
 package br.com.joe.service
 
 import br.com.joe.configs.mapper.DozerMapper
-import br.com.joe.entity.User
 import br.com.joe.entity.vo.UserVO
 import br.com.joe.exception.UserNotFoundException
 import br.com.joe.repository.UserRepository
@@ -23,38 +22,30 @@ class UserService {
         return mapper.toUserVO(saveUser)
     }
 
-    fun findAllUsers(): List<User> {
+    fun findAllUsers(): List<UserVO> {
         val users = repository.findAll()
         if (users.isEmpty()) {
             throw UserNotFoundException("No user found!!!")
         }
-        return users
+        return mapper.toUserVOList(users)
     }
 
-    fun findByName(name: String): User? {
+    fun findByName(name: String): UserVO {
         val user = repository.findByName(name)
-        if (user != null) {
-            return user
-        } else {
-            throw UserNotFoundException("User not found for this $name")
-        }
+            ?: throw UserNotFoundException("User not found for this $name")
+        return mapper.toUserVO(user)
     }
 
-    fun findByEmail(email: String): User? {
+    fun findByEmail(email: String): UserVO {
         val user = repository.findByEmail(email)
-        if (user != null) {
-            return user
-        } else {
-            throw UserNotFoundException("User not found for this $email")
-        }
+            ?: throw UserNotFoundException("User not found for this $email")
+        return mapper.toUserVO(user)
     }
 
-    fun findByCpf(cpf: String): User{
+    fun findByCpf(cpf: String): UserVO{
         val user = repository.findByCpf(cpf)
-        if (user != null){
-            return user
-        }
-        throw UserNotFoundException("User not found for this $cpf")
+            ?: throw UserNotFoundException("User not found for this $cpf")
+        return mapper.toUserVO(user)
     }
 
     fun deleteUser(id: Int){
@@ -66,20 +57,18 @@ class UserService {
         }
     }
 
-    fun deleteByCpf(cpf: String): User{
+    fun deleteByCpf(cpf: String): UserVO{
         val user = repository.findByCpf(cpf)
             ?: throw UserNotFoundException("User not found for this $cpf")
         repository.delete(user)
-        return user
+        return mapper.toUserVO(user)
     }
 
-    fun atualizarEmail(cpf: String, novoEmail: String): User{
+    fun atualizarEmail(cpf: String, novoEmail: String): UserVO{
         val user = repository.findByCpf(cpf)
-        if (user != null){
-            user.email = novoEmail
-            return repository.save(user)
-        }else{
-            throw UserNotFoundException("User not found for this $cpf")
-        }
+            ?: throw UserNotFoundException("User not found for this $cpf")
+        user.email = novoEmail
+        val userUpdater = repository.save(user)
+        return mapper.toUserVO(userUpdater)
     }
 }
