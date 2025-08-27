@@ -1,6 +1,8 @@
 package br.com.joe.service
 
+import br.com.joe.configs.mapper.DozerMapper
 import br.com.joe.entity.User
+import br.com.joe.entity.vo.UserVO
 import br.com.joe.exception.UserNotFoundException
 import br.com.joe.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,8 +14,13 @@ class UserService {
     @Autowired
     private lateinit var repository: UserRepository
 
-    fun save(user: User): User {
-        return repository.save(user)
+    @Autowired
+    private lateinit var mapper: DozerMapper
+
+    fun save(userVO: UserVO): UserVO {
+        val user = mapper.toUser(userVO)
+        val saveUser = repository.save(user)
+        return mapper.toUserVO(saveUser)
     }
 
     fun findAllUsers(): List<User> {

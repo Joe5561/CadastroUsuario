@@ -1,6 +1,7 @@
 package br.com.joe.controllers
 
 import br.com.joe.entity.User
+import br.com.joe.entity.vo.UserVO
 import br.com.joe.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -28,9 +29,9 @@ class UserController {
 
     @PostMapping
     @Operation(summary = "Cadastrar usuários", description = "Efetuar o cadastro de usuários")
-    fun saveUser(@RequestBody user: User): ResponseEntity<User>{
-        val userSave = service.save(user)
-        return ResponseEntity.ok(userSave)
+    fun saveUser(@RequestBody userVO: UserVO): ResponseEntity<UserVO>{
+        val userSaveVO = service.save(userVO)
+        return ResponseEntity.ok(userSaveVO)
     }
 
     @GetMapping
