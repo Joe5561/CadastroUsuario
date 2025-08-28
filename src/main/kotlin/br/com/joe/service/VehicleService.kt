@@ -1,6 +1,8 @@
 package br.com.joe.service
 
+import br.com.joe.configs.mapper.DozerMapper
 import br.com.joe.entity.Vehicle
+import br.com.joe.entity.vo.VehicleVO
 import br.com.joe.exception.VehicleNotFoundException
 import br.com.joe.repository.VehicleRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,8 +14,13 @@ class VehicleService {
     @Autowired
     private lateinit var repository: VehicleRepository
 
-    fun save(vehicle: Vehicle): Vehicle{
-        return repository.save(vehicle)
+    @Autowired
+    private lateinit var mapper: DozerMapper
+
+    fun save(vehicleVO: VehicleVO): VehicleVO{
+        val vehicle = mapper.toVehicle(vehicleVO)
+        val saveVehicle = repository.save(vehicle)
+        return mapper.toVehicleVO(saveVehicle)
     }
 
     fun findAllVehicle(): List<Vehicle>{

@@ -1,7 +1,9 @@
 package br.com.joe.configs.mapper
 
 import br.com.joe.entity.User
+import br.com.joe.entity.Vehicle
 import br.com.joe.entity.vo.UserVO
+import br.com.joe.entity.vo.VehicleVO
 import com.github.dozermapper.core.Mapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -36,5 +38,21 @@ class DozerMapper {
 
     fun toUserList(userVOs: List<UserVO>): List<User> {
         return userVOs.map { mapper.map(it, User::class.java) }
+    }
+
+    fun toVehicle(vehicleVO: VehicleVO): Vehicle{
+        return mapper.map(vehicleVO, Vehicle::class.java)
+    }
+
+    fun toVehicleVO(vehicle: Vehicle): VehicleVO{
+        return mapper.map(vehicle, VehicleVO::class.java)
+    }
+
+    fun toVehicleVOList(vehicles: List<Vehicle>): List<VehicleVO>{
+        return vehicles.map { mapper.map(it, VehicleVO::class.java) }
+    }
+
+    fun toVehicleList(vehicleVOs: List<VehicleVO>): List<Vehicle>{
+        return vehicleVOs.map { mapper.map(it, Vehicle::class.java) }
     }
 }
