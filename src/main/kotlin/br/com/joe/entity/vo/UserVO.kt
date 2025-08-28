@@ -1,5 +1,7 @@
 package br.com.joe.entity.vo
 
+import org.springframework.hateoas.RepresentationModel
+
 data class UserVO(
 
     var id: Long = 0,
@@ -8,4 +10,4 @@ data class UserVO(
     var email: String = "",
     var address: String = ""
 
-)
+): RepresentationModel<VehicleVO>()

@@ -5,6 +5,8 @@ import br.com.joe.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -21,49 +23,79 @@ class UserController {
     @Operation(summary = "Cadastrar usuários", description = "Efetuar o cadastro de usuários")
     fun saveUser(@RequestBody userVO: UserVO): ResponseEntity<UserVO>{
         val userSaveVO = service.save(userVO)
-        return ResponseEntity.ok(userSaveVO)
+        userSaveVO.add(
+            linkTo(methodOn(UserController::class.java)
+                .saveUser(userSaveVO)).withSelfRel()
+        )
+        return ResponseEntity.status(HttpStatus.CREATED).body(userSaveVO)
     }
 
     @GetMapping
     @Operation(summary = "Listar todos os usuários")
     fun listUsers(): ResponseEntity<List<UserVO>>{
         val users = service.findAllUsers()
-        return ResponseEntity.ok(users)
+        users.forEach { userVO ->
+            userVO.add(
+                linkTo(methodOn(UserController::class.java)
+                    .findByCpf(userVO.cpf)).withSelfRel()
+            )
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(users)
     }
 
     @GetMapping("/email")
     @Operation(summary = "Busca por e-mail", description = "Efetuar a busca por e-mail")
     fun findByEmail(@RequestParam email: String): ResponseEntity<UserVO>{
         val userVO = service.findByEmail(email)
-        return ResponseEntity.ok(userVO)
+        userVO.add(
+            linkTo(methodOn(UserController::class.java)
+                .findByEmail(userVO.email)).withSelfRel()
+        )
+        return ResponseEntity.status(HttpStatus.OK).body(userVO)
     }
 
     @GetMapping("/name")
     @Operation(summary = "Busca por nome", description = "Efetua a busca pelo nome")
     fun findByName(@RequestParam name: String): ResponseEntity<UserVO>{
         val userVO = service.findByName(name)
-        return ResponseEntity.ok(userVO)
+        userVO.add(
+            linkTo(methodOn(UserController::class.java)
+                .findByName(userVO.name)).withSelfRel()
+        )
+        return ResponseEntity.status(HttpStatus.OK).body(userVO)
     }
 
     @PatchMapping("/email")
     @Operation(summary = "Atualizar email")
     fun atualizarEmmail(@RequestParam cpf: String,@RequestParam novoEmail: String): ResponseEntity<UserVO> {
         val userUpdaterVO = service.atualizarEmail(cpf, novoEmail)
-        return ResponseEntity.ok(userUpdaterVO)
+        userUpdaterVO.add(
+            linkTo(methodOn(UserController::class.java)
+                .atualizarEmmail(userUpdaterVO.cpf, userUpdaterVO.email)).withSelfRel()
+        )
+        return ResponseEntity.status(HttpStatus.OK).body(userUpdaterVO)
     }
 
     @GetMapping("/cpf")
     @Operation(summary = "Buscar por cpf")
     fun findByCpf(@RequestParam cpf: String): ResponseEntity<UserVO>{
         val userVO = service.findByCpf(cpf)
-        return ResponseEntity.ok(userVO)
+        userVO.add(
+            linkTo(methodOn(UserController::class.java)
+                .findByCpf(userVO.cpf)).withSelfRel()
+        )
+        return ResponseEntity.status(HttpStatus.OK).body(userVO)
     }
 
     @DeleteMapping("/cpf")
     @Operation(summary = "Deletar usuário por cpf")
     fun deleteByCpf(@RequestParam cpf: String): ResponseEntity<UserVO>{
         val deleteUserVO = service.deleteByCpf(cpf)
-        return ResponseEntity.ok(deleteUserVO)
+        deleteUserVO.add(
+            linkTo(methodOn(UserController::class.java)
+                .deleteByCpf(deleteUserVO.cpf)).withSelfRel()
+        )
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(deleteUserVO)
     }
 
     @DeleteMapping("/{id}")
