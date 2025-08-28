@@ -1,7 +1,6 @@
 package br.com.joe.service
 
 import br.com.joe.configs.mapper.DozerMapper
-import br.com.joe.entity.Vehicle
 import br.com.joe.entity.vo.VehicleVO
 import br.com.joe.exception.VehicleNotFoundException
 import br.com.joe.repository.VehicleRepository

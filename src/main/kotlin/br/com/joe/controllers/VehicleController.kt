@@ -1,6 +1,5 @@
 package br.com.joe.controllers
 
-import br.com.joe.entity.Vehicle
 import br.com.joe.entity.vo.VehicleVO
 import br.com.joe.service.VehicleService
 import io.swagger.v3.oas.annotations.Operation
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 
 @RestController
 @RequestMapping("/vehicle")
@@ -27,14 +28,24 @@ class VehicleController {
     @PostMapping
     @Operation(summary = "Cadastrar veiculos", description = "Efetuar o cadastro de veiculos")
     fun saveVehicle(@RequestBody vehicleVO: VehicleVO): ResponseEntity<VehicleVO>{
-        val saveVehicle = service.save(vehicleVO)
-        return ResponseEntity.status(HttpStatus.CREATED).body(saveVehicle)
+        val saveVehicleVO = service.save(vehicleVO)
+        saveVehicleVO.add(
+            linkTo(methodOn(VehicleController::class.java)
+                .saveVehicle(saveVehicleVO)).withSelfRel()
+        )
+        return ResponseEntity.status(HttpStatus.CREATED).body(saveVehicleVO)
     }
 
     @GetMapping
     @Operation(summary = "Buscar todos os veículos")
     fun listVehicle(): ResponseEntity<List<VehicleVO>>{
         val vehicles = service.findAllVehicle()
+        vehicles.forEach { vehicleVO ->
+            vehicleVO.add(
+                linkTo(methodOn(VehicleController::class.java)
+                    .findByPlaca(vehicleVO.placa)).withSelfRel()
+            )
+        }
         return ResponseEntity.ok().body(vehicles)
     }
 
@@ -42,6 +53,10 @@ class VehicleController {
     @Operation(summary = "Buscar pela placa")
     fun findByPlaca(@RequestParam placa: String): ResponseEntity<VehicleVO>{
         val vehicleVO = service.findByPlaca(placa)
+        vehicleVO.add(
+            linkTo(methodOn(VehicleController::class.java)
+                .findByPlaca(placa)).withSelfRel()
+        )
         return ResponseEntity.ok(vehicleVO)
     }
 
@@ -49,6 +64,10 @@ class VehicleController {
     @Operation(summary = "Deletar veículo pela placa")
     fun deleteByPlaca(@RequestParam placa: String): ResponseEntity<VehicleVO>{
         val deleteVehicleVO = service.deleteByPlaca(placa)
+        deleteVehicleVO.add(
+            linkTo(methodOn(VehicleController::class.java)
+                .findByPlaca(placa)).withSelfRel()
+        )
         return ResponseEntity.ok().body(deleteVehicleVO)
     }
 }
