@@ -33,21 +33,22 @@ class VehicleController {
 
     @GetMapping
     @Operation(summary = "Buscar todos os veículos")
-    fun listVehicle(): ResponseEntity<List<Vehicle>>{
+    fun listVehicle(): ResponseEntity<List<VehicleVO>>{
         val vehicles = service.findAllVehicle()
         return ResponseEntity.ok().body(vehicles)
     }
 
     @GetMapping("/placa")
     @Operation(summary = "Buscar pela placa")
-    fun findByPlaca(@RequestParam placa: String): Vehicle{
-        return service.findByPlaca(placa)
+    fun findByPlaca(@RequestParam placa: String): ResponseEntity<VehicleVO>{
+        val vehicleVO = service.findByPlaca(placa)
+        return ResponseEntity.ok(vehicleVO)
     }
 
     @DeleteMapping("/deletePlaca")
     @Operation(summary = "Deletar veículo pela placa")
-    fun deleteByPlaca(@RequestParam placa: String): ResponseEntity<Vehicle>{
-        val deleteVehicle = service.deleteByPlaca(placa)
-        return ResponseEntity.ok().body(deleteVehicle)
+    fun deleteByPlaca(@RequestParam placa: String): ResponseEntity<VehicleVO>{
+        val deleteVehicleVO = service.deleteByPlaca(placa)
+        return ResponseEntity.ok().body(deleteVehicleVO)
     }
 }

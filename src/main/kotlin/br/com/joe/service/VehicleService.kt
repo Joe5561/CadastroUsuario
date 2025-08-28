@@ -23,27 +23,24 @@ class VehicleService {
         return mapper.toVehicleVO(saveVehicle)
     }
 
-    fun findAllVehicle(): List<Vehicle>{
+    fun findAllVehicle(): List<VehicleVO>{
         val vehicle = repository.findAll()
         if (vehicle.isEmpty()){
-            throw VehicleNotFoundException("No vehicle found!!")
+            throw VehicleNotFoundException("No vehicles found!!")
         }
-        return vehicle
+        return mapper.toVehicleVOList(vehicle)
     }
 
-    fun findByPlaca(placa: String): Vehicle{
+    fun findByPlaca(placa: String): VehicleVO{
         val vehicle = repository.findByPlaca(placa)
-        if (vehicle != null){
-            return vehicle
-        }else{
-            throw VehicleNotFoundException("Vehicle not found for this $placa")
-        }
+            ?: throw VehicleNotFoundException("Vehicle not found for this $placa")
+        return mapper.toVehicleVO(vehicle)
     }
 
-    fun deleteByPlaca(placa: String): Vehicle?{
+    fun deleteByPlaca(placa: String): VehicleVO{
         val vehicle = repository.findByPlaca(placa)
             ?: throw VehicleNotFoundException("Vehicle not found for this $placa")
         repository.delete(vehicle)
-        return vehicle
+        return mapper.toVehicleVO(vehicle)
     }
 }
