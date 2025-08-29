@@ -18,7 +18,7 @@ data class User(
     @Column(name = "nome", nullable = false)
     var name: String = "",
 
-    @Column(name = "cpf", nullable = false)
+    @Column(name = "cpf", nullable = false, unique = true)
     var cpf: String = "",
 
     @Column(name = "email", nullable = false)

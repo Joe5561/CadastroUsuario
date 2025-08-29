@@ -2,6 +2,7 @@ package br.com.joe.service
 
 import br.com.joe.configs.mapper.DozerMapper
 import br.com.joe.entity.vo.VehicleVO
+import br.com.joe.exception.ExistingBoardException
 import br.com.joe.exception.VehicleNotFoundException
 import br.com.joe.repository.VehicleRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,6 +18,10 @@ class VehicleService {
     private lateinit var mapper: DozerMapper
 
     fun save(vehicleVO: VehicleVO): VehicleVO{
+        val existingVehicle = repository.findByPlaca(vehicleVO.placa)
+        if (existingVehicle != null){
+            throw ExistingBoardException("This board is already registered!! ${existingVehicle.placa}")
+        }
         val vehicle = mapper.toVehicle(vehicleVO)
         val saveVehicle = repository.save(vehicle)
         return mapper.toVehicleVO(saveVehicle)

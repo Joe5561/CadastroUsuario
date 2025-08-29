@@ -24,6 +24,6 @@ data class Vehicle(
     @Column(name = "ano", nullable = false)
     var ano: String = "",
 
-    @Column(name = "placa", nullable = false)
+    @Column(name = "placa", nullable = false, unique = true)
     var placa: String = ""
 )

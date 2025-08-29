@@ -1,7 +1,9 @@
 package br.com.joe.exception.handler
 
 import br.com.joe.exception.ExceptionResponse
+import br.com.joe.exception.ExistingBoardException
 import br.com.joe.exception.ResourceNotFoundException
+import br.com.joe.exception.UserConflictException
 import br.com.joe.exception.UserNotFoundException
 import br.com.joe.exception.VehicleNotFoundException
 import org.springframework.http.HttpStatus
@@ -52,4 +54,27 @@ class CustomizedResponseEntityExceptionHandler: ResponseEntityExceptionHandler()
         return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.NOT_FOUND)
     }
 
+    @ExceptionHandler(ExistingBoardException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    fun handleExistingBoardException(ex: Exception, request: WebRequest):
+            ResponseEntity<ExceptionResponse> {
+        val exceptionResponse = ExceptionResponse(
+            Date(),
+            ex.message,
+            request.getDescription(false)
+        )
+        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.CONFLICT)
+    }
+
+    @ExceptionHandler(UserConflictException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    fun handleUserConflictException(ex: Exception, request: WebRequest):
+            ResponseEntity<ExceptionResponse> {
+        val exceptionResponse = ExceptionResponse(
+            Date(),
+            ex.message,
+            request.getDescription(false)
+        )
+        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.CONFLICT)
+    }
 }
