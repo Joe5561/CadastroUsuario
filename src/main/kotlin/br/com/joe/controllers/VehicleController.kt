@@ -46,7 +46,7 @@ class VehicleController {
                     .findByPlaca(vehicleVO.placa)).withSelfRel()
             )
         }
-        return ResponseEntity.ok().body(vehicles)
+        return ResponseEntity.status(HttpStatus.OK).body(vehicles)
     }
 
     @GetMapping("/placa")
@@ -57,7 +57,7 @@ class VehicleController {
             linkTo(methodOn(VehicleController::class.java)
                 .findByPlaca(placa)).withSelfRel()
         )
-        return ResponseEntity.ok(vehicleVO)
+        return ResponseEntity.status(HttpStatus.OK).body(vehicleVO)
     }
 
     @DeleteMapping("/deletePlaca")
@@ -68,6 +68,6 @@ class VehicleController {
             linkTo(methodOn(VehicleController::class.java)
                 .findByPlaca(placa)).withSelfRel()
         )
-        return ResponseEntity.ok().body(deleteVehicleVO)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(deleteVehicleVO)
     }
 }
