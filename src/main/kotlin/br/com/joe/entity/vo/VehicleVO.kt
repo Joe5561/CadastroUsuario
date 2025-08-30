@@ -7,5 +7,6 @@ data class VehicleVO(
     var modelo: String = "",
     var marca: String = "",
     var ano: String = "",
-    var placa: String = ""
+    var placa: String = "",
+    var user: UserVO? = null
 ): RepresentationModel<VehicleVO>()

@@ -2,9 +2,12 @@ package br.com.joe.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 
 @Entity
@@ -25,5 +28,9 @@ data class Vehicle(
     var ano: String = "",
 
     @Column(name = "placa", nullable = false, unique = true)
-    var placa: String = ""
+    var placa: String = "",
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    var user: User? = null
 )

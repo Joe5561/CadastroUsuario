@@ -55,4 +55,12 @@ class DozerMapper {
     fun toVehicleList(vehicleVOs: List<VehicleVO>): List<Vehicle>{
         return vehicleVOs.map { mapper.map(it, Vehicle::class.java) }
     }
+
+    fun toVehicleVOWithUser(vehicle: Vehicle): VehicleVO {
+        val vehicleVO = mapper.map(vehicle, VehicleVO::class.java)
+        vehicle.user?.let {
+            vehicleVO.user = mapper.map(it, UserVO::class.java)
+        }
+        return vehicleVO
+    }
 }

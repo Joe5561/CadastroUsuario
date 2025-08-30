@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository
 interface VehicleRepository: JpaRepository<Vehicle, Long> {
     fun findByPlaca(placa: String): Vehicle?
     fun deleteByPlaca(placa: String): Vehicle?
+    fun findFirstByUserCpf(cpf: String): Vehicle?
 }

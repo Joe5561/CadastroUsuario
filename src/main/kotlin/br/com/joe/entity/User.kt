@@ -1,10 +1,12 @@
 package br.com.joe.entity
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 
 @Entity
@@ -25,6 +27,9 @@ data class User(
     var email: String = "",
 
     @Column(name = "address", nullable = false)
-    var address: String = ""
+    var address: String = "",
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var vehicles: MutableList<Vehicle> = mutableListOf()
 
 )
