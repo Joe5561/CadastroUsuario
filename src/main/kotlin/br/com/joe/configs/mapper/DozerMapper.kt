@@ -2,6 +2,7 @@ package br.com.joe.configs.mapper
 
 import br.com.joe.entity.User
 import br.com.joe.entity.Vehicle
+import br.com.joe.entity.dto.VehicleSummaryDTO
 import br.com.joe.entity.vo.UserVO
 import br.com.joe.entity.vo.VehicleVO
 import com.github.dozermapper.core.Mapper
@@ -62,5 +63,17 @@ class DozerMapper {
             vehicleVO.user = mapper.map(it, UserVO::class.java)
         }
         return vehicleVO
+    }
+
+    fun toVehicleSummaryDTOList(vehicles: List<Vehicle>): List<VehicleSummaryDTO> {
+        return vehicles.map {
+            VehicleSummaryDTO(
+                id = it.id,
+                modelo = it.modelo,
+                marca = it.marca,
+                ano = it.ano,
+                placa = it.placa
+            )
+        }
     }
 }

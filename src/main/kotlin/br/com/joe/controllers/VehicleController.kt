@@ -1,10 +1,12 @@
 package br.com.joe.controllers
 
+import br.com.joe.entity.dto.VehicleSummaryDTO
 import br.com.joe.entity.vo.VehicleVO
 import br.com.joe.service.VehicleService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.hateoas.EntityModel
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -27,47 +29,53 @@ class VehicleController {
 
     @PostMapping
     @Operation(summary = "Cadastrar veiculos", description = "Efetuar o cadastro de veiculos")
-    fun saveVehicle(@RequestBody vehicleVO: VehicleVO): ResponseEntity<VehicleVO>{
-        val saveVehicleVO = service.save(vehicleVO)
-        saveVehicleVO.add(
-            linkTo(methodOn(VehicleController::class.java)
-                .saveVehicle(saveVehicleVO)).withSelfRel()
+    fun saveVehicleDTO(@RequestBody vehicleDTO: VehicleSummaryDTO): ResponseEntity<EntityModel<VehicleSummaryDTO>>{
+        val saveVehicleDTO = service.save(vehicleDTO)
+
+        val resource = EntityModel.of(saveVehicleDTO).add(
+            linkTo(
+                methodOn(VehicleController::class.java)
+                    .findByPlaca(saveVehicleDTO.placa)).withSelfRel()
         )
-        return ResponseEntity.status(HttpStatus.CREATED).body(saveVehicleVO)
+        return ResponseEntity.status(HttpStatus.CREATED).body(resource)
     }
 
     @GetMapping
     @Operation(summary = "Buscar todos os veículos")
-    fun listVehicle(): ResponseEntity<List<VehicleVO>>{
+    fun listVehicle(): ResponseEntity<List<EntityModel<VehicleSummaryDTO>>>{
         val vehicles = service.findAllVehicle()
-        vehicles.forEach { vehicleVO ->
-            vehicleVO.add(
-                linkTo(methodOn(VehicleController::class.java)
-                    .findByPlaca(vehicleVO.placa)).withSelfRel()
-            )
+        val vehicleResources = vehicles.map { dTO ->
+            EntityModel.of(dTO).add(
+                linkTo(
+                    methodOn(VehicleController::class.java)
+                        .findByPlaca(dTO.placa)).withSelfRel()
+                )
         }
-        return ResponseEntity.status(HttpStatus.OK).body(vehicles)
+        return ResponseEntity.status(HttpStatus.OK).body(vehicleResources)
     }
 
     @GetMapping("/placa")
     @Operation(summary = "Buscar pela placa")
-    fun findByPlaca(@RequestParam placa: String): ResponseEntity<VehicleVO>{
-        val vehicleVO = service.findByPlaca(placa)
-        vehicleVO.add(
-            linkTo(methodOn(VehicleController::class.java)
-                .findByPlaca(placa)).withSelfRel()
-        )
-        return ResponseEntity.status(HttpStatus.OK).body(vehicleVO)
+    fun findByPlaca(@RequestParam placa: String): ResponseEntity<EntityModel<VehicleSummaryDTO>>    {
+        val vehicleDTO = service.findByPlaca(placa)
+        val resource = EntityModel.of(vehicleDTO).add(
+            linkTo(
+                methodOn(VehicleController::class.java)
+                    .findByPlaca(placa)).withSelfRel()
+            )
+        return ResponseEntity.status(HttpStatus.OK).body(resource)
     }
 
     @DeleteMapping("/deletePlaca")
     @Operation(summary = "Deletar veículo pela placa")
-    fun deleteByPlaca(@RequestParam placa: String): ResponseEntity<VehicleVO>{
-        val deleteVehicleVO = service.deleteByPlaca(placa)
-        deleteVehicleVO.add(
-            linkTo(methodOn(VehicleController::class.java)
-                .findByPlaca(placa)).withSelfRel()
-        )
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(deleteVehicleVO)
-    }
+    fun deleteByPlaca(@RequestParam placa: String): ResponseEntity<EntityModel<VehicleSummaryDTO>>{
+        val deleteVehicleDTO = service.deleteByPlaca(placa)
+
+        val resource = EntityModel.of(deleteVehicleDTO).add(
+            linkTo(
+                methodOn(VehicleController::class.java)
+                    .findByPlaca(placa)).withSelfRel()
+            )
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(resource)
+        }
 }

@@ -30,7 +30,7 @@ data class Vehicle(
     @Column(name = "placa", nullable = false, unique = true)
     var placa: String = "",
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = true)
     var user: User? = null
 )
