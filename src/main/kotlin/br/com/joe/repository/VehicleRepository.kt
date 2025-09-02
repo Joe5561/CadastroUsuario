@@ -15,4 +15,7 @@ interface VehicleRepository: JpaRepository<Vehicle, Long> {
     @Query("SELECT COUNT(v) > 0 FROM Vehicle v WHERE v.placa = :placa")
     fun existsByPlaca(@Param("placa") placa: String): Boolean
 
+    @Query("SELECT v FROM Vehicle v LEFT JOIN FETCH v.user WHERE v.placa = :placa")
+    fun findByPlacaWithUser(@Param("placa") placa: String): Vehicle?
+
 }

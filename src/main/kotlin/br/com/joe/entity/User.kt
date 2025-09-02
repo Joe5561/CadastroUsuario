@@ -29,7 +29,7 @@ data class User(
     @Column(name = "address", nullable = false)
     var address: String = "",
 
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = [], orphanRemoval = false)
     var vehicles: MutableList<Vehicle> = mutableListOf()
 
 )

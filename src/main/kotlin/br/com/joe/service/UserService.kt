@@ -2,11 +2,13 @@ package br.com.joe.service
 
 import br.com.joe.configs.mapper.DozerMapper
 import br.com.joe.entity.vo.UserVO
+import br.com.joe.exception.IllegalStateException
 import br.com.joe.exception.UserConflictException
 import br.com.joe.exception.UserNotFoundException
 import br.com.joe.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserService {
@@ -62,9 +64,13 @@ class UserService {
         }
     }
 
+    @Transactional
     fun deleteByCpf(cpf: String): UserVO{
         val user = repository.findByCpf(cpf)
             ?: throw UserNotFoundException("User not found for this $cpf")
+        if (user.vehicles.isNotEmpty()){
+            throw IllegalStateException("It is not allowed to delete user with linked vehicles")
+        }
         repository.delete(user)
         return mapper.toUserVO(user)
     }

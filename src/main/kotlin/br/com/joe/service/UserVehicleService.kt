@@ -33,7 +33,7 @@ class UserVehicleService {
             ?: throw VehicleNotFoundException("Vehicle not found for this $placa")
 
         if (vehicle.user != null && vehicle.user!!.cpf != cpf){
-            throw VehicleAlreadyAssignedException("vehicle already rented!!")
+            throw VehicleAlreadyAssignedException("Vehicle already rented!!")
         }
         vehicle.user = user
         val vehicleUpdated = vehicleRepository.save(vehicle)

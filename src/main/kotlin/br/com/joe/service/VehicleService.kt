@@ -5,10 +5,14 @@ import br.com.joe.entity.Vehicle
 import br.com.joe.entity.dto.VehicleSummaryDTO
 import br.com.joe.entity.vo.VehicleVO
 import br.com.joe.exception.ExistingBoardException
+import br.com.joe.exception.IllegalStateException
 import br.com.joe.exception.VehicleNotFoundException
 import br.com.joe.repository.VehicleRepository
+import org.hibernate.Hibernate
+import org.hibernate.LazyInitializationException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class VehicleService {
@@ -61,11 +65,20 @@ class VehicleService {
         )
     }
 
+    @Transactional
     fun deleteByPlaca(placa: String): VehicleSummaryDTO{
         if (!repository.existsByPlaca(placa)){
-            throw VehicleNotFoundException("Vehicle not found for placa: $placa")
+            throw VehicleNotFoundException("Vehicle not found for this: $placa")
         }
         val vehicle = repository.findByPlaca(placa)!!
+        val isLinkedToUser =  try {
+            vehicle.user?.id != null
+        }catch (ex: LazyInitializationException){
+            true
+        }
+        if (isLinkedToUser){
+            throw IllegalStateException("It is not allowed to delete vehicle linked to the user ${vehicle.user?.name}")
+        }
         repository.delete(vehicle)
 
         return VehicleSummaryDTO(
