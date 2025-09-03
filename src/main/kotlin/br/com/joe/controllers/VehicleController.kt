@@ -1,7 +1,6 @@
 package br.com.joe.controllers
 
 import br.com.joe.entity.dto.VehicleSummaryDTO
-import br.com.joe.entity.vo.VehicleVO
 import br.com.joe.service.VehicleService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag

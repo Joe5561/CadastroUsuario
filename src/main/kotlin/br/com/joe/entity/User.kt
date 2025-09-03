@@ -1,13 +1,6 @@
 package br.com.joe.entity
 
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
-import jakarta.persistence.Table
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "user")
@@ -28,6 +21,18 @@ data class User(
 
     @Column(name = "address", nullable = false)
     var address: String = "",
+
+    @Column(name = "telefone", nullable = false)
+    var telefone: String = "",
+
+    @Column(name = "cep", nullable = false)
+    var cep: String = "",
+
+    @Column(name = "bairro", nullable = false)
+    var bairro: String = "",
+
+    @Column(name = "complemento", nullable = false)
+    var complemento: String = "",
 
     @OneToMany(mappedBy = "user", cascade = [], orphanRemoval = false)
     var vehicles: MutableList<Vehicle> = mutableListOf()

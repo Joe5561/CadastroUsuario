@@ -8,6 +8,10 @@ data class UserVO(
     var name: String = "",
     var cpf: String = "",
     var email: String = "",
-    var address: String = ""
+    var address: String = "",
+    var telefone: String = "",
+    var cep: String = "",
+    var bairro: String = "",
+    var complemento: String = ""
 
 ): RepresentationModel<VehicleVO>()

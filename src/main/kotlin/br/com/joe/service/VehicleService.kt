@@ -3,12 +3,10 @@ package br.com.joe.service
 import br.com.joe.configs.mapper.DozerMapper
 import br.com.joe.entity.Vehicle
 import br.com.joe.entity.dto.VehicleSummaryDTO
-import br.com.joe.entity.vo.VehicleVO
 import br.com.joe.exception.ExistingBoardException
 import br.com.joe.exception.IllegalStateException
 import br.com.joe.exception.VehicleNotFoundException
 import br.com.joe.repository.VehicleRepository
-import org.hibernate.Hibernate
 import org.hibernate.LazyInitializationException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
