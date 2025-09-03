@@ -1,5 +1,6 @@
 package br.com.joe.controllers
 
+import br.com.joe.entity.vo.UserWithCleanVehiclesVO
 import br.com.joe.entity.vo.UserWithVehiclesVO
 import br.com.joe.entity.vo.VehicleVO
 import br.com.joe.service.UserVehicleService
@@ -37,7 +38,7 @@ class UserVehicleController {
 
     @GetMapping("userWhithVehicle")
     @Operation(summary = "Search for rented vehicles")
-    fun findUserWithVehicle(@RequestParam cpf: String): ResponseEntity<UserWithVehiclesVO>{
+    fun findUserWithVehicle(@RequestParam cpf: String): ResponseEntity<UserWithCleanVehiclesVO>{
         val userVehicles = userVehicleService.findUserWithVehicleByCpf(cpf)
         userVehicles.add(
             linkTo(methodOn(UserVehicleController::class.java)

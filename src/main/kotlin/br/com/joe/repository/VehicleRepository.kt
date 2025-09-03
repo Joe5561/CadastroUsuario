@@ -18,4 +18,6 @@ interface VehicleRepository: JpaRepository<Vehicle, Long> {
     @Query("SELECT v FROM Vehicle v LEFT JOIN FETCH v.user WHERE v.placa = :placa")
     fun findByPlacaWithUser(@Param("placa") placa: String): Vehicle?
 
+    fun findAllByUserCpf(cpf: String): List<Vehicle>
+
 }

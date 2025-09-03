@@ -1,6 +1,7 @@
 package br.com.joe.service
 
 import br.com.joe.configs.mapper.DozerMapper
+import br.com.joe.entity.vo.UserWithCleanVehiclesVO
 import br.com.joe.entity.vo.UserWithVehiclesVO
 import br.com.joe.entity.vo.VehicleVO
 import br.com.joe.exception.UserNotFoundException
@@ -41,14 +42,18 @@ class UserVehicleService {
     }
 
     @Transactional
-    fun findUserWithVehicleByCpf(cpf: String): UserWithVehiclesVO{
+    fun findUserWithVehicleByCpf(cpf: String): UserWithCleanVehiclesVO{
         val user = userRepository.findByCpf(cpf)
             ?: throw UserNotFoundException("User not found for this $cpf")
 
-        val vehicles = vehicleRepository.findFirstByUserCpf(cpf)
-            ?: throw VehicleNotFoundException("No vehicle linked to user with CPF: $cpf")
-
-        val vehicleVO = mapper.toVehicleVOWithUser(vehicles)
-        return UserWithVehiclesVO(vehicle = vehicleVO)
+        val vehicles = vehicleRepository.findAllByUserCpf(cpf)
+            if (vehicles.isEmpty()){
+               throw VehicleNotFoundException("No vehicle linked to user with CPF: $cpf")
+            }
+        val cleanVehicleVOs = vehicles.map { mapper.toCleanVehicleVO(it) }
+        return UserWithCleanVehiclesVO(
+            vehicles = cleanVehicleVOs,
+            user = mapper.toUserVO(user)
+        )
     }
 }
