@@ -22,6 +22,9 @@ data class User(
     @Column(name = "address", nullable = false)
     var address: String = "",
 
+    @Column(name = "numero", nullable = true)
+    var numero: String? = null,
+
     @Column(name = "telefone", nullable = false)
     var telefone: String = "",
 

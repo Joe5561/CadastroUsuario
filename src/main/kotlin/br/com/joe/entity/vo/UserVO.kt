@@ -9,6 +9,7 @@ data class UserVO(
     var cpf: String = "",
     var email: String = "",
     var address: String = "",
+    var numero: String? = null,
     var telefone: String = "",
     var cep: String = "",
     var bairro: String = "",

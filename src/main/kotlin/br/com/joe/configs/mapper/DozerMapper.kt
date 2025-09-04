@@ -3,7 +3,7 @@ package br.com.joe.configs.mapper
 import br.com.joe.entity.User
 import br.com.joe.entity.Vehicle
 import br.com.joe.entity.dto.VehicleSummaryDTO
-import br.com.joe.entity.vo.CleanVehicleVO
+import br.com.joe.entity.dto.CleanVehicleDTO
 import br.com.joe.entity.vo.UserVO
 import br.com.joe.entity.vo.VehicleVO
 import com.github.dozermapper.core.Mapper
@@ -78,7 +78,7 @@ class DozerMapper {
         }
     }
 
-    fun toCleanVehicleVO(vehicle: Vehicle): CleanVehicleVO {
-        return mapper.map(vehicle, CleanVehicleVO::class.java)
+    fun toCleanVehicleVO(vehicle: Vehicle): CleanVehicleDTO {
+        return mapper.map(vehicle, CleanVehicleDTO::class.java)
     }
 }

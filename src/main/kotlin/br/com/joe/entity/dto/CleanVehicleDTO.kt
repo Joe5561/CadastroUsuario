@@ -1,6 +1,6 @@
-package br.com.joe.entity.vo
+package br.com.joe.entity.dto
 
-data class CleanVehicleVO(
+data class CleanVehicleDTO(
     var id: Long = 0,
     var modelo: String = "",
     var marca: String = "",
