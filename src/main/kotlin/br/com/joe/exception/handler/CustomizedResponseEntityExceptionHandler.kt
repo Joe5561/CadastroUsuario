@@ -1,5 +1,6 @@
 package br.com.joe.exception.handler
 
+import br.com.joe.exception.CpfCnpjInvalidException
 import br.com.joe.exception.ExceptionResponse
 import br.com.joe.exception.ExistingBoardException
 import br.com.joe.exception.ResourceNotFoundException
@@ -7,8 +8,10 @@ import br.com.joe.exception.UserConflictException
 import br.com.joe.exception.UserNotFoundException
 import br.com.joe.exception.VehicleAlreadyAssignedException
 import br.com.joe.exception.VehicleNotFoundException
+import jakarta.validation.ConstraintViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -94,6 +97,18 @@ class CustomizedResponseEntityExceptionHandler: ResponseEntityExceptionHandler()
     @ExceptionHandler(IllegalStateException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleIllegalStateException(ex: Exception, request: WebRequest):
+            ResponseEntity<ExceptionResponse> {
+        val exceptionResponse = ExceptionResponse(
+            Date(),
+            ex.message,
+            request.getDescription(false)
+        )
+        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(CpfCnpjInvalidException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun handleCpfCnpjInvalidException(ex: Exception, request: WebRequest):
             ResponseEntity<ExceptionResponse> {
         val exceptionResponse = ExceptionResponse(
             Date(),

@@ -15,4 +15,4 @@ data class UserVO(
     var bairro: String = "",
     var complemento: String = ""
 
-): RepresentationModel<VehicleVO>()
+): RepresentationModel<UserVO>()

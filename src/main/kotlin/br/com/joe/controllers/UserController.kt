@@ -4,6 +4,7 @@ import br.com.joe.entity.vo.UserVO
 import br.com.joe.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
@@ -67,7 +68,7 @@ class UserController {
 
     @PatchMapping("/email")
     @Operation(summary = "Atualizar email")
-    fun atualizarEmmail(@RequestParam cpf: String,@RequestParam novoEmail: String): ResponseEntity<UserVO> {
+    fun atualizarEmmail(@RequestParam cpf: String, @RequestParam novoEmail: String): ResponseEntity<UserVO> {
         val userUpdaterVO = service.atualizarEmail(cpf, novoEmail)
         userUpdaterVO.add(
             linkTo(methodOn(UserController::class.java)

@@ -2,10 +2,12 @@ package br.com.joe.service
 
 import br.com.joe.configs.mapper.DozerMapper
 import br.com.joe.entity.vo.UserVO
+import br.com.joe.exception.CpfCnpjInvalidException
 import br.com.joe.exception.IllegalStateException
 import br.com.joe.exception.UserConflictException
 import br.com.joe.exception.UserNotFoundException
 import br.com.joe.repository.UserRepository
+import br.com.joe.utils.validator.CpfCnpjValidator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,6 +22,12 @@ class UserService {
     private lateinit var mapper: DozerMapper
 
     fun save(userVO: UserVO): UserVO {
+        val validator = CpfCnpjValidator()
+        val isValid = validator.isValidCpf(userVO.cpf)
+        if (!isValid){
+            throw CpfCnpjInvalidException("CPF or CNPJ not valid")
+        }
+
         val existingCpf = repository.findByCpf(userVO.cpf)
         if (existingCpf != null){
             throw UserConflictException("Already registered user!! ${existingCpf.cpf}")
