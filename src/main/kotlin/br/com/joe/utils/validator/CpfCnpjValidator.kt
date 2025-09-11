@@ -19,13 +19,22 @@ class CpfCnpjValidator: ConstraintValidator<CpfCnpj, String> {
         return digits[9] == dv1 && digits[10] == dv2
     }
 
-    fun isValidCnpj(cnpj: String): Boolean{
+    fun isValidCnpj(cnpj: String): Boolean {
         if (cnpj.length != 14 || cnpj.matches(Regex("(\\d)\\1{13}"))) return false
+
         val digits = cnpj.map { it.toString().toInt() }
+
         val weights1 = intArrayOf(5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2)
         val weights2 = intArrayOf(6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2)
-        val dv1 = (0..11).sumOf { digits[it] * weights1[it] } % 11.let { if (it < 2) 0 else 11 - it }
-        val dv2 = (0..12).sumOf { digits[it] * weights2[it] } % 11.let { if (it < 2) 0 else 11 - it }
+
+        val sum1 = (0..11).sumOf { digits[it] * weights1[it] }
+        val remainder1 = sum1 % 11
+        val dv1 = if (remainder1 < 2) 0 else 11 - remainder1
+
+        val sum2 = (0..12).sumOf { digits[it] * weights2[it] }
+        val remainder2 = sum2 % 11
+        val dv2 = if (remainder2 < 2) 0 else 11 - remainder2
+
         return digits[12] == dv1 && digits[13] == dv2
     }
 }

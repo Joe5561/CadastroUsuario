@@ -23,8 +23,9 @@ class UserService {
 
     fun save(userVO: UserVO): UserVO {
         val validator = CpfCnpjValidator()
-        val isValid = validator.isValidCpf(userVO.cpf)
-        if (!isValid){
+        val isValidCpf = validator.isValidCpf(userVO.cpf)
+        val isValidCnpj = validator.isValidCnpj(userVO.cpf)
+        if (!isValidCpf && !isValidCnpj){
             throw CpfCnpjInvalidException("CPF or CNPJ not valid")
         }
 
