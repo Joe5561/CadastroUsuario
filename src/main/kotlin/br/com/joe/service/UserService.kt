@@ -45,10 +45,10 @@ class UserService {
         return mapper.toUserVOList(users)
     }
 
-    fun findByName(name: String): UserVO {
-        val user = repository.findByName(name)
+    fun findByName(name: String): List<UserVO> {
+        val users = repository.findByName(name)
             ?: throw UserNotFoundException("User not found for this $name")
-        return mapper.toUserVO(user)
+        return users.map { mapper.toUserVO(it) }
     }
 
     fun findByEmail(email: String): UserVO {

@@ -57,13 +57,16 @@ class UserController {
 
     @GetMapping("/name")
     @Operation(summary = "Busca por nome", description = "Efetua a busca pelo nome")
-    fun findByName(@RequestParam name: String): ResponseEntity<UserVO>{
-        val userVO = service.findByName(name)
-        userVO.add(
-            linkTo(methodOn(UserController::class.java)
-                .findByName(userVO.name)).withSelfRel()
-        )
-        return ResponseEntity.status(HttpStatus.OK).body(userVO)
+    fun findByName(@RequestParam name: String): ResponseEntity<List<UserVO>>{
+        val usersVO = service.findByName(name)
+        usersVO.forEach { userVO ->
+            userVO.add(
+                linkTo(methodOn(
+                    UserController::class.java)
+                    .findByName(userVO.name)).withSelfRel()
+                )
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(usersVO)
     }
 
     @PatchMapping("/email")
