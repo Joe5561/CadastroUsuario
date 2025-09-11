@@ -91,4 +91,12 @@ class UserService {
         val userUpdater = repository.save(user)
         return mapper.toUserVO(userUpdater)
     }
+
+    fun atualizarNome(cpf: String, novoNome: String): UserVO{
+        val user = repository.findByCpf(cpf)
+            ?: throw UserNotFoundException("User not found for this $cpf")
+        user.name = novoNome
+        val userUpdate = repository.save(user)
+        return mapper.toUserVO(userUpdate)
+    }
 }

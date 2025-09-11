@@ -80,6 +80,17 @@ class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userUpdaterVO)
     }
 
+    @PatchMapping("/name")
+    @Operation(summary = "Atualizar nome")
+    fun atualizarNome(@RequestParam cpf: String, @RequestParam novoNome: String): ResponseEntity<UserVO>{
+        val userUpdateVO = service.atualizarNome(cpf, novoNome)
+        userUpdateVO.add(
+            linkTo(methodOn(UserController::class.java)
+                .atualizarNome(userUpdateVO.cpf, userUpdateVO.name)).withSelfRel()
+        )
+        return ResponseEntity.status(HttpStatus.OK).body(userUpdateVO)
+    }
+
     @GetMapping("/cpf")
     @Operation(summary = "Buscar por cpf")
     fun findByCpf(@RequestParam cpf: String): ResponseEntity<UserVO>{
