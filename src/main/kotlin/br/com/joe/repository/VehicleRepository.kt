@@ -2,6 +2,7 @@ package br.com.joe.repository
 
 import br.com.joe.entity.Vehicle
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
@@ -19,5 +20,9 @@ interface VehicleRepository: JpaRepository<Vehicle, Long> {
     fun findByPlacaWithUser(@Param("placa") placa: String): Vehicle?
 
     fun findAllByUserCpf(cpf: String): List<Vehicle>
+
+    @Modifying
+    @Query("UPDATE Vehicle v SET v.user = null WHERE v.placa = :placa")
+    fun desvincularUsuario(@Param("placa") placa: String): Int
 
 }

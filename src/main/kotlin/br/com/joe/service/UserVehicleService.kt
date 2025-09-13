@@ -56,4 +56,13 @@ class UserVehicleService {
             user = mapper.toUserVO(user)
         )
     }
+
+    @Transactional
+    fun desvincularVeiculo(placa: String): String{
+        val updated = vehicleRepository.desvincularUsuario(placa)
+        return if (updated > 0){
+            "Veiculo desvinculado com sucesso!!"
+        }else
+            throw VehicleNotFoundException("Vehicle not found!!")
+    }
 }

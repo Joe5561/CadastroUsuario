@@ -12,6 +12,7 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -45,5 +46,12 @@ class UserVehicleController {
                 .findUserWithVehicle(cpf)).withSelfRel()
         )
         return ResponseEntity.status(HttpStatus.OK).body(userVehicles)
+    }
+
+    @PatchMapping("/vehicle/unlink")
+    @Operation(summary = "Desvincular veículo do usuário", description = "Remove a associação entre veículo e usuário")
+    fun desvincularVeiculo(@RequestParam placa: String): ResponseEntity<String>{
+        val resultado = userVehicleService.desvincularVeiculo(placa)
+        return ResponseEntity.ok(resultado)
     }
 }
