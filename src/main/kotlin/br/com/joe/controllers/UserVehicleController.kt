@@ -2,6 +2,7 @@ package br.com.joe.controllers
 
 import br.com.joe.entity.vo.UserWithCleanVehiclesVO
 import br.com.joe.entity.vo.UserWithVehiclesVO
+import br.com.joe.entity.vo.VehicleUserVO
 import br.com.joe.entity.vo.VehicleVO
 import br.com.joe.service.UserVehicleService
 import io.swagger.v3.oas.annotations.Operation
@@ -50,8 +51,12 @@ class UserVehicleController {
 
     @PatchMapping("/vehicle/unlink")
     @Operation(summary = "Desvincular veículo do usuário", description = "Remove a associação entre veículo e usuário")
-    fun desvincularVeiculo(@RequestParam placa: String): ResponseEntity<String>{
-        val resultado = userVehicleService.desvincularVeiculo(placa)
-        return ResponseEntity.ok(resultado)
+    fun desvincularVeiculo(@RequestParam placa: String): ResponseEntity<VehicleUserVO>{
+        val vehicleUserVO = userVehicleService.desvincularVeiculo(placa)
+        vehicleUserVO.add(
+            linkTo(methodOn(UserVehicleController::class.java)
+                .desvincularVeiculo(placa)).withSelfRel()
+        )
+        return ResponseEntity.status(HttpStatus.OK).body(vehicleUserVO)
     }
 }
