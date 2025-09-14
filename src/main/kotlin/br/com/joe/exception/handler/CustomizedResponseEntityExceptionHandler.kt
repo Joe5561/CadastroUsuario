@@ -7,6 +7,7 @@ import br.com.joe.exception.ResourceNotFoundException
 import br.com.joe.exception.UserConflictException
 import br.com.joe.exception.UserNotFoundException
 import br.com.joe.exception.VehicleAlreadyAssignedException
+import br.com.joe.exception.VehicleAlreadyUnlinkedException
 import br.com.joe.exception.VehicleNotFoundException
 import jakarta.validation.ConstraintViolationException
 import org.springframework.http.HttpStatus
@@ -116,5 +117,18 @@ class CustomizedResponseEntityExceptionHandler: ResponseEntityExceptionHandler()
             request.getDescription(false)
         )
         return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.BAD_REQUEST)
+    }
+
+
+    @ExceptionHandler(VehicleAlreadyUnlinkedException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    fun handleVehicleAlreadyUnlinkedException(ex: Exception, request: WebRequest):
+            ResponseEntity<ExceptionResponse> {
+        val exceptionResponse = ExceptionResponse(
+            Date(),
+            ex.message,
+            request.getDescription(false)
+        )
+        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.CONFLICT)
     }
 }

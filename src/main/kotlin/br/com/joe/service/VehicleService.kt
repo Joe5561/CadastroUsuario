@@ -21,6 +21,7 @@ class VehicleService {
     @Autowired
     private lateinit var mapper: DozerMapper
 
+    @Transactional
     fun save(vehicleDTO: VehicleSummaryDTO): VehicleSummaryDTO{
         val existingVehicle = repository.findByPlaca(vehicleDTO.placa)
         if (existingVehicle != null){
@@ -43,6 +44,7 @@ class VehicleService {
         )
     }
 
+    @Transactional
     fun findAllVehicle(): List<VehicleSummaryDTO>{
         val vehicle = repository.findAll()
         if (vehicle.isEmpty()){
@@ -51,6 +53,7 @@ class VehicleService {
         return mapper.toVehicleSummaryDTOList(vehicle)
     }
 
+    @Transactional
     fun findByPlaca(placa: String): VehicleSummaryDTO{
         val vehicle = repository.findByPlaca(placa)
             ?: throw VehicleNotFoundException("Vehicle not found for this $placa")

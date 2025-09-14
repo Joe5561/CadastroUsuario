@@ -21,6 +21,7 @@ class UserService {
     @Autowired
     private lateinit var mapper: DozerMapper
 
+    @Transactional
     fun save(userVO: UserVO): UserVO {
         val validator = CpfCnpjValidator()
         val isValidCpf = validator.isValidCpf(userVO.cpf)
@@ -38,6 +39,7 @@ class UserService {
         return mapper.toUserVO(saveUser)
     }
 
+    @Transactional
     fun findAllUsers(): List<UserVO> {
         val users = repository.findAll()
         if (users.isEmpty()) {
@@ -46,24 +48,28 @@ class UserService {
         return mapper.toUserVOList(users)
     }
 
+    @Transactional
     fun findByName(name: String): List<UserVO> {
         val users = repository.findByName(name)
             ?: throw UserNotFoundException("User not found for this $name")
         return users.map { mapper.toUserVO(it) }
     }
 
+    @Transactional
     fun findByEmail(email: String): UserVO {
         val user = repository.findByEmail(email)
             ?: throw UserNotFoundException("User not found for this $email")
         return mapper.toUserVO(user)
     }
 
+    @Transactional
     fun findByCpf(cpf: String): UserVO{
         val user = repository.findByCpf(cpf)
             ?: throw UserNotFoundException("User not found for this $cpf")
         return mapper.toUserVO(user)
     }
 
+    @Transactional
     fun deleteUser(id: Int){
         val user = repository.findById(id)
         if (user.isPresent){
@@ -84,6 +90,7 @@ class UserService {
         return mapper.toUserVO(user)
     }
 
+    @Transactional
     fun atualizarEmail(cpf: String, novoEmail: String): UserVO{
         val user = repository.findByCpf(cpf)
             ?: throw UserNotFoundException("User not found for this $cpf")
@@ -92,6 +99,7 @@ class UserService {
         return mapper.toUserVO(userUpdater)
     }
 
+    @Transactional
     fun atualizarNome(cpf: String, novoNome: String): UserVO{
         val user = repository.findByCpf(cpf)
             ?: throw UserNotFoundException("User not found for this $cpf")

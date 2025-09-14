@@ -7,6 +7,7 @@ import br.com.joe.entity.vo.VehicleUserVO
 import br.com.joe.entity.vo.VehicleVO
 import br.com.joe.exception.UserNotFoundException
 import br.com.joe.exception.VehicleAlreadyAssignedException
+import br.com.joe.exception.VehicleAlreadyUnlinkedException
 import br.com.joe.exception.VehicleNotFoundException
 import br.com.joe.repository.UserRepository
 import br.com.joe.repository.VehicleRepository
@@ -60,13 +61,16 @@ class UserVehicleService {
 
     @Transactional
     fun desvincularVeiculo(placa: String): VehicleUserVO{
+        val vehicle = vehicleRepository.findByPlaca(placa)
+            ?: throw VehicleNotFoundException("Vehicle not found $placa")
+
+        val user = userRepository.findUsuarioByVeiculoPlaca(placa)
+            ?: throw VehicleAlreadyUnlinkedException("Vehicle with plate $placa is already detached")
+
         val updated = vehicleRepository.desvincularUsuario(placa)
         if (updated == 0){
             throw VehicleNotFoundException("Vehicle with the sign $placa not found")
         }
-        val vehicle = vehicleRepository.findByPlaca(placa)
-            ?: throw VehicleNotFoundException("Vehicle not found after detachment $placa")
-
         return VehicleUserVO(
             id = vehicle.id,
             modelo = vehicle.modelo,
