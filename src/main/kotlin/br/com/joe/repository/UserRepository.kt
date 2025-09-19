@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UserRepository : JpaRepository<User, Int> {
     fun findByEmail(email: String): User?
-    fun findByName(name: String): List<User>?
+    fun findByNameContainingIgnoreCase(name: String): List<User>?
     fun findByCpf(cpf: String): User?
 
     @Query("SELECT u FROM User u JOIN u.vehicles v WHERE v.placa = :placa")

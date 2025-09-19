@@ -50,7 +50,7 @@ class UserService {
 
     @Transactional
     fun findByName(name: String): List<UserVO> {
-        val users = repository.findByName(name)
+        val users = repository.findByNameContainingIgnoreCase(name)
             ?: throw UserNotFoundException("User not found for this $name")
         return users.map { mapper.toUserVO(it) }
     }
