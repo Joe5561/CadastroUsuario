@@ -97,6 +97,11 @@
             <version>8.0.0.Final</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+
 	</dependencies>
 
 	<build>
