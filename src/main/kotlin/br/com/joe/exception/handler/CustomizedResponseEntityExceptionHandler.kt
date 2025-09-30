@@ -1,6 +1,7 @@
 package br.com.joe.exception.handler
 
 import br.com.joe.exception.CpfCnpjInvalidException
+import br.com.joe.exception.EmailInvalidException
 import br.com.joe.exception.ExceptionResponse
 import br.com.joe.exception.ExistingBoardException
 import br.com.joe.exception.ResourceNotFoundException
@@ -123,6 +124,18 @@ class CustomizedResponseEntityExceptionHandler: ResponseEntityExceptionHandler()
     @ExceptionHandler(VehicleAlreadyUnlinkedException::class)
     @ResponseStatus(HttpStatus.CONFLICT)
     fun handleVehicleAlreadyUnlinkedException(ex: Exception, request: WebRequest):
+            ResponseEntity<ExceptionResponse> {
+        val exceptionResponse = ExceptionResponse(
+            Date(),
+            ex.message,
+            request.getDescription(false)
+        )
+        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.CONFLICT)
+    }
+
+    @ExceptionHandler(EmailInvalidException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    fun handleEmailInvalidException(ex: Exception, request: WebRequest):
             ResponseEntity<ExceptionResponse> {
         val exceptionResponse = ExceptionResponse(
             Date(),

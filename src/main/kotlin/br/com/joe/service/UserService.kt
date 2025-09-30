@@ -3,11 +3,13 @@ package br.com.joe.service
 import br.com.joe.configs.mapper.DozerMapper
 import br.com.joe.entity.vo.UserVO
 import br.com.joe.exception.CpfCnpjInvalidException
+import br.com.joe.exception.EmailInvalidException
 import br.com.joe.exception.IllegalStateException
 import br.com.joe.exception.UserConflictException
 import br.com.joe.exception.UserNotFoundException
 import br.com.joe.repository.UserRepository
 import br.com.joe.utils.validator.CpfCnpjValidator
+import br.com.joe.utils.validator.EmailValidator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -29,10 +31,18 @@ class UserService {
         if (!isValidCpf && !isValidCnpj){
             throw CpfCnpjInvalidException("CPF or CNPJ not valid")
         }
-
         val existingCpf = repository.findByCpf(userVO.cpf)
         if (existingCpf != null){
             throw UserConflictException("Already registered user!! ${existingCpf.cpf}")
+        }
+        val checkEmail = EmailValidator()
+        val isValidEmail = checkEmail.isEmailValid(userVO.email)
+        if (!isValidEmail){
+            throw EmailInvalidException("E-mail not valid!!")
+        }
+        val existingEmail = repository.findByEmail(userVO.email)
+        if (existingEmail != null){
+            throw UserConflictException("E-mail already registered!! ${existingEmail.email}")
         }
         val user = mapper.toUser(userVO)
         val saveUser = repository.save(user)
