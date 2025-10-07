@@ -4,6 +4,7 @@ import br.com.joe.exception.CpfCnpjInvalidException
 import br.com.joe.exception.EmailInvalidException
 import br.com.joe.exception.ExceptionResponse
 import br.com.joe.exception.ExistingBoardException
+import br.com.joe.exception.ExistingNumberException
 import br.com.joe.exception.ResourceNotFoundException
 import br.com.joe.exception.UserConflictException
 import br.com.joe.exception.UserNotFoundException
@@ -136,6 +137,18 @@ class CustomizedResponseEntityExceptionHandler: ResponseEntityExceptionHandler()
     @ExceptionHandler(EmailInvalidException::class)
     @ResponseStatus(HttpStatus.CONFLICT)
     fun handleEmailInvalidException(ex: Exception, request: WebRequest):
+            ResponseEntity<ExceptionResponse> {
+        val exceptionResponse = ExceptionResponse(
+            Date(),
+            ex.message,
+            request.getDescription(false)
+        )
+        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.CONFLICT)
+    }
+
+    @ExceptionHandler(ExistingNumberException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    fun handleExistingNumberException(ex: Exception, request: WebRequest):
             ResponseEntity<ExceptionResponse> {
         val exceptionResponse = ExceptionResponse(
             Date(),
