@@ -1,9 +1,11 @@
 package br.com.joe.configs.mapper
 
+import br.com.joe.entity.Address
 import br.com.joe.entity.User
 import br.com.joe.entity.Vehicle
 import br.com.joe.entity.dto.VehicleSummaryDTO
 import br.com.joe.entity.dto.CleanVehicleDTO
+import br.com.joe.entity.vo.AddressVO
 import br.com.joe.entity.vo.UserVO
 import br.com.joe.entity.vo.VehicleVO
 import com.github.dozermapper.core.Mapper
@@ -80,5 +82,21 @@ class DozerMapper {
 
     fun toCleanVehicleVO(vehicle: Vehicle): CleanVehicleDTO {
         return mapper.map(vehicle, CleanVehicleDTO::class.java)
+    }
+
+    fun toAddress(addressVO: AddressVO): Address {
+        return mapper.map(addressVO, Address::class.java)
+    }
+
+    fun toAddressVO(address: Address): AddressVO {
+        return mapper.map(address, AddressVO::class.java)
+    }
+
+    fun toAddressVOList(addresses: List<Address>): List<AddressVO> {
+        return addresses.map { mapper.map(it, AddressVO::class.java) }
+    }
+
+    fun toAddressList(addressVOs: List<AddressVO>): List<Address> {
+        return addressVOs.map { mapper.map(it, Address::class.java) }
     }
 }
