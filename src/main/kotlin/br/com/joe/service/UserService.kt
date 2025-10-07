@@ -5,11 +5,13 @@ import br.com.joe.entity.vo.UserVO
 import br.com.joe.exception.CpfCnpjInvalidException
 import br.com.joe.exception.EmailInvalidException
 import br.com.joe.exception.IllegalStateException
+import br.com.joe.exception.PhoneInvalidException
 import br.com.joe.exception.UserConflictException
 import br.com.joe.exception.UserNotFoundException
 import br.com.joe.repository.UserRepository
 import br.com.joe.utils.validator.CpfCnpjValidator
 import br.com.joe.utils.validator.EmailValidator
+import br.com.joe.utils.validator.PhoneValidator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -43,6 +45,11 @@ class UserService {
         val existingEmail = repository.findByEmail(userVO.email)
         if (existingEmail != null){
             throw UserConflictException("E-mail already registered!! ${existingEmail.email}")
+        }
+        val checkPhone = PhoneValidator()
+        val isValidPhone = checkPhone.isPhoneValid(userVO.telefone)
+        if (!isValidPhone){
+            throw PhoneInvalidException("Phone not valid!!")
         }
         val user = mapper.toUser(userVO)
         val saveUser = repository.save(user)

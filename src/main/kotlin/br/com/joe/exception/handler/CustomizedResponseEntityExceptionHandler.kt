@@ -6,6 +6,7 @@ import br.com.joe.exception.EmailInvalidException
 import br.com.joe.exception.ExceptionResponse
 import br.com.joe.exception.ExistingBoardException
 import br.com.joe.exception.ExistingNumberException
+import br.com.joe.exception.PhoneInvalidException
 import br.com.joe.exception.ResourceNotFoundException
 import br.com.joe.exception.UserConflictException
 import br.com.joe.exception.UserNotFoundException
@@ -169,5 +170,17 @@ class CustomizedResponseEntityExceptionHandler: ResponseEntityExceptionHandler()
             request.getDescription(false)
         )
         return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(PhoneInvalidException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    fun handlePhoneInvalidException(ex: Exception, request: WebRequest):
+            ResponseEntity<ExceptionResponse> {
+        val exceptionResponse = ExceptionResponse(
+            Date(),
+            ex.message,
+            request.getDescription(false)
+        )
+        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.CONFLICT)
     }
 }
