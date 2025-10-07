@@ -1,5 +1,6 @@
 package br.com.joe.exception.handler
 
+import br.com.joe.exception.AddressNotFoundException
 import br.com.joe.exception.CpfCnpjInvalidException
 import br.com.joe.exception.EmailInvalidException
 import br.com.joe.exception.ExceptionResponse
@@ -156,5 +157,17 @@ class CustomizedResponseEntityExceptionHandler: ResponseEntityExceptionHandler()
             request.getDescription(false)
         )
         return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.CONFLICT)
+    }
+
+    @ExceptionHandler(AddressNotFoundException::class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun handleAddressNotFoundException(ex: Exception, request: WebRequest):
+            ResponseEntity<ExceptionResponse> {
+        val exceptionResponse = ExceptionResponse(
+            Date(),
+            ex.message,
+            request.getDescription(false)
+        )
+        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.NOT_FOUND)
     }
 }

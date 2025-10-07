@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 
 @RestController
@@ -31,5 +32,18 @@ class AddressController {
                 .saveAddress(addressVO)).withSelfRel()
         )
         return ResponseEntity.status(HttpStatus.CREATED).body(addressVO)
+    }
+
+    @GetMapping
+    @Operation(summary = "Listar endereços", description = "Efetuar a listagem de endereços")
+    fun findAllAddress(): ResponseEntity<List<AddressVO>>{
+        val address = addressService.findAllAddress()
+        address.forEach { addressVO ->
+            addressVO.add(
+                linkTo(methodOn(AddressController::class.java)
+                    .findAllAddress()).withSelfRel()
+            )
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(address)
     }
 }
