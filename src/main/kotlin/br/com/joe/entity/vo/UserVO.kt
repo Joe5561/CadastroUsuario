@@ -9,6 +9,6 @@ data class UserVO(
     var cpf: String = "",
     var email: String = "",
     var telefone: String = "",
-    var address: List<AddressVO>
+    var address: List<AddressVO> = emptyList()
 
 ): RepresentationModel<UserVO>()

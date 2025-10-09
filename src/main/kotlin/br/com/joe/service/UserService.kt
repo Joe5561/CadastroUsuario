@@ -55,7 +55,8 @@ class UserService {
         }
         val user = mapper.toUserFromCreateDTO(userDTO)
         val saveUser = repository.save(user)
-        return mapper.toUserResponseDTO(saveUser)
+        val userVO = mapper.toUserVO(saveUser)
+        return mapper.toUserResponseDTO(userVO)
     }
 
     @Transactional
@@ -64,28 +65,34 @@ class UserService {
         if (users.isEmpty()) {
             throw UserNotFoundException("No user found!!!")
         }
-        return mapper.toUserResponseDTOList(users)
+        val userVO = mapper.toUserVOList(users)
+        return mapper.toUserResponseDTOList(userVO)
     }
 
     @Transactional
     fun findByName(name: String): List<UserResponseDTO> {
         val users = repository.findByNameContainingIgnoreCase(name)
             ?: throw UserNotFoundException("User not found!!")
-        return users.map { mapper.toUserResponseDTO(it) }
+        return users.map { user ->
+            val userVO = mapper.toUserVO(user)
+            mapper.toUserResponseDTO(userVO)
+        }
     }
 
     @Transactional
     fun findByEmail(email: String): UserResponseDTO {
         val user = repository.findByEmail(email)
             ?: throw UserNotFoundException("User not found for this $email")
-        return mapper.toUserResponseDTO(user)
+        val userVO = mapper.toUserVO(user)
+        return mapper.toUserResponseDTO(userVO)
     }
 
     @Transactional
     fun findByCpf(cpf: String): UserResponseDTO{
         val user = repository.findByCpfWithAddress(cpf)
             ?: throw UserNotFoundException("User not found for this $cpf")
-        return mapper.toUserResponseDTO(user)
+        val userVO = mapper.toUserVO(user)
+        return mapper.toUserResponseDTO(userVO)
     }
 
     @Transactional
@@ -115,7 +122,8 @@ class UserService {
             ?: throw UserNotFoundException("User not found for this $cpf")
         user.email = novoEmail
         val userUpdater = repository.save(user)
-        return mapper.toUserResponseDTO(userUpdater)
+        val userVO = mapper.toUserVO(userUpdater)
+        return mapper.toUserResponseDTO(userVO)
     }
 
     @Transactional
@@ -124,6 +132,7 @@ class UserService {
             ?: throw UserNotFoundException("User not found for this $cpf")
         user.name = novoNome
         val userUpdate = repository.save(user)
-        return mapper.toUserResponseDTO(userUpdate)
+        val userVO = mapper.toUserVO(userUpdate)
+        return mapper.toUserResponseDTO(userVO)
     }
 }

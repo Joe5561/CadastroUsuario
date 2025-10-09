@@ -54,7 +54,7 @@ class UserController {
             linkTo(methodOn(UserController::class.java)
                 .findByEmail(userDTO.email)).withSelfRel()
         )
-        return ResponseEntity.status(HttpStatus.OK).body(userDTO)
+        return ResponseEntity.status(HttpStatus.FOUND).body(userDTO)
     }
 
     @GetMapping("/name")
@@ -101,7 +101,7 @@ class UserController {
             linkTo(methodOn(UserController::class.java)
                 .findByCpf(cpf)).withSelfRel()
         )
-        return ResponseEntity.status(HttpStatus.OK).body(userDTO)
+        return ResponseEntity.status(HttpStatus.FOUND).body(userDTO)
     }
 
     @DeleteMapping("/cpf")
