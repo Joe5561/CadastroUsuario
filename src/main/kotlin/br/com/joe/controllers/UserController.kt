@@ -114,11 +114,4 @@ class UserController {
         )
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(deleteUserVO)
     }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Deletar usuários")
-    fun deleteUser(@PathVariable id: Int){
-        service.deleteUser(id)
-    }
 }

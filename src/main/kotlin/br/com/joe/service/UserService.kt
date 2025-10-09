@@ -96,16 +96,6 @@ class UserService {
     }
 
     @Transactional
-    fun deleteUser(id: Int){
-        val user = repository.findById(id)
-        if (user.isPresent){
-            repository.deleteById(id)
-        }else{
-            throw UserNotFoundException("User not found for this $id")
-        }
-    }
-
-    @Transactional
     fun deleteByCpf(cpf: String): UserVO{
         val user = repository.findByCpf(cpf)
             ?: throw UserNotFoundException("User not found for this $cpf")
