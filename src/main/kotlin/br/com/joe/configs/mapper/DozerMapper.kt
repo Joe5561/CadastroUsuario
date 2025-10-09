@@ -3,8 +3,12 @@ package br.com.joe.configs.mapper
 import br.com.joe.entity.Address
 import br.com.joe.entity.User
 import br.com.joe.entity.Vehicle
+import br.com.joe.entity.dto.AddressCreateDTO
+import br.com.joe.entity.dto.AddressResponseDTO
 import br.com.joe.entity.dto.VehicleSummaryDTO
 import br.com.joe.entity.dto.CleanVehicleDTO
+import br.com.joe.entity.dto.UserCreateDTO
+import br.com.joe.entity.dto.UserResponseDTO
 import br.com.joe.entity.vo.AddressVO
 import br.com.joe.entity.vo.UserVO
 import br.com.joe.entity.vo.VehicleVO
@@ -98,5 +102,88 @@ class DozerMapper {
 
     fun toAddressList(addressVOs: List<AddressVO>): List<Address> {
         return addressVOs.map { mapper.map(it, Address::class.java) }
+    }
+
+    fun toUserFromCreateDTO(dto: UserCreateDTO): User {
+        val addresses = dto.address.map {
+            Address(
+                logradouro = it.logradouro,
+                numero = it.numero,
+                complemento = it.complemento,
+                bairro = it.bairro,
+                cep = it.cep
+            )
+        }
+
+        return User(
+            name = dto.name,
+            cpf = dto.cpf,
+            email = dto.email,
+            telefone = dto.telefone,
+            address = addresses.toMutableList()
+        )
+    }
+
+    fun toUserResponseDTO(user: User): UserResponseDTO {
+        val addressDTOs = user.address.map {
+            AddressResponseDTO(
+                id = it.id,
+                logradouro = it.logradouro,
+                numero = it.numero,
+                complemento = it.complemento,
+                bairro = it.bairro,
+                cep = it.cep
+            )
+        }
+
+        val dto = UserResponseDTO(
+            id = user.id,
+            name = user.name,
+            email = user.email,
+            telefone = user.telefone,
+            address = addressDTOs
+        )
+
+        return dto
+    }
+
+    fun toAddressFromCreateDTO(dto: AddressCreateDTO): Address {
+        return Address(
+            logradouro = dto.logradouro,
+            numero = dto.numero,
+            complemento = dto.complemento,
+            bairro = dto.bairro,
+            cep = dto.cep
+        )
+    }
+
+    fun toAddressResponseDTO(address: Address): AddressResponseDTO {
+        return AddressResponseDTO(
+            id = address.id,
+            logradouro = address.logradouro,
+            numero = address.numero,
+            complemento = address.complemento,
+            bairro = address.bairro,
+            cep = address.cep
+        )
+    }
+
+    fun toUserWithAddressVO(user: User): UserVO{
+        return UserVO(
+            id = user.id,
+            name = user.name,
+            email = user.email,
+            telefone = user.telefone,
+            address = user.address.map { address ->
+                AddressVO(
+                    id = address.id,
+                    logradouro = address.logradouro,
+                    numero = address.numero,
+                    complemento = address.complemento,
+                    bairro = address.bairro,
+                    cep = address.cep
+                )
+            }
+        )
     }
 }

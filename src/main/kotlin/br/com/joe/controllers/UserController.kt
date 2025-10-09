@@ -1,5 +1,7 @@
 package br.com.joe.controllers
 
+import br.com.joe.entity.dto.UserCreateDTO
+import br.com.joe.entity.dto.UserResponseDTO
 import br.com.joe.entity.vo.UserVO
 import br.com.joe.service.UserService
 import io.swagger.v3.oas.annotations.Operation
@@ -22,13 +24,13 @@ class UserController {
 
     @PostMapping
     @Operation(summary = "Cadastrar usuários", description = "Efetuar o cadastro de usuários")
-    fun saveUser(@RequestBody userVO: UserVO): ResponseEntity<UserVO>{
-        val userSaveVO = service.save(userVO)
-        userSaveVO.add(
+    fun saveUser(@RequestBody userDTO: UserCreateDTO): ResponseEntity<UserResponseDTO>{
+        val userSaveDTO = service.save(userDTO)
+        userSaveDTO.add(
             linkTo(methodOn(UserController::class.java)
-                .saveUser(userSaveVO)).withSelfRel()
+                .saveUser(userDTO)).withSelfRel()
         )
-        return ResponseEntity.status(HttpStatus.CREATED).body(userSaveVO)
+        return ResponseEntity.status(HttpStatus.CREATED).body(userSaveDTO)
     }
 
     @GetMapping
@@ -93,13 +95,13 @@ class UserController {
 
     @GetMapping("/cpf")
     @Operation(summary = "Buscar por cpf")
-    fun findByCpf(@RequestParam cpf: String): ResponseEntity<UserVO>{
-        val userVO = service.findByCpf(cpf)
-        userVO.add(
+    fun findByCpf(@RequestParam cpf: String): ResponseEntity<UserResponseDTO>{
+        val userDTO = service.findByCpf(cpf)
+        userDTO.add(
             linkTo(methodOn(UserController::class.java)
-                .findByCpf(userVO.cpf)).withSelfRel()
+                .findByCpf(cpf)).withSelfRel()
         )
-        return ResponseEntity.status(HttpStatus.OK).body(userVO)
+        return ResponseEntity.status(HttpStatus.OK).body(userDTO)
     }
 
     @DeleteMapping("/cpf")

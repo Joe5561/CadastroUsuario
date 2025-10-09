@@ -1,6 +1,8 @@
 package br.com.joe.service
 
 import br.com.joe.configs.mapper.DozerMapper
+import br.com.joe.entity.dto.UserCreateDTO
+import br.com.joe.entity.dto.UserResponseDTO
 import br.com.joe.entity.vo.UserVO
 import br.com.joe.exception.CpfCnpjInvalidException
 import br.com.joe.exception.EmailInvalidException
@@ -26,34 +28,34 @@ class UserService {
     private lateinit var mapper: DozerMapper
 
     @Transactional
-    fun save(userVO: UserVO): UserVO {
+    fun save(userDTO: UserCreateDTO): UserResponseDTO {
         val validator = CpfCnpjValidator()
-        val isValidCpf = validator.isValidCpf(userVO.cpf)
-        val isValidCnpj = validator.isValidCnpj(userVO.cpf)
+        val isValidCpf = validator.isValidCpf(userDTO.cpf)
+        val isValidCnpj = validator.isValidCnpj(userDTO.cpf)
         if (!isValidCpf && !isValidCnpj){
             throw CpfCnpjInvalidException("CPF or CNPJ not valid")
         }
-        val existingCpf = repository.findByCpf(userVO.cpf)
+        val existingCpf = repository.findByCpf(userDTO.cpf)
         if (existingCpf != null){
             throw UserConflictException("Already registered user!! ${existingCpf.cpf}")
         }
         val checkEmail = EmailValidator()
-        val isValidEmail = checkEmail.isEmailValid(userVO.email)
+        val isValidEmail = checkEmail.isEmailValid(userDTO.email)
         if (!isValidEmail){
             throw EmailInvalidException("E-mail not valid!!")
         }
-        val existingEmail = repository.findByEmail(userVO.email)
+        val existingEmail = repository.findByEmail(userDTO.email)
         if (existingEmail != null){
             throw UserConflictException("E-mail already registered!! ${existingEmail.email}")
         }
         val checkPhone = PhoneValidator()
-        val isValidPhone = checkPhone.isPhoneValid(userVO.telefone)
+        val isValidPhone = checkPhone.isPhoneValid(userDTO.telefone)
         if (!isValidPhone){
             throw PhoneInvalidException("Phone not valid!!")
         }
-        val user = mapper.toUser(userVO)
+        val user = mapper.toUserFromCreateDTO(userDTO)
         val saveUser = repository.save(user)
-        return mapper.toUserVO(saveUser)
+        return mapper.toUserResponseDTO(saveUser)
     }
 
     @Transactional
@@ -80,10 +82,10 @@ class UserService {
     }
 
     @Transactional
-    fun findByCpf(cpf: String): UserVO{
-        val user = repository.findByCpf(cpf)
+    fun findByCpf(cpf: String): UserResponseDTO{
+        val user = repository.findByCpfWithAddress(cpf)
             ?: throw UserNotFoundException("User not found for this $cpf")
-        return mapper.toUserVO(user)
+        return mapper.toUserResponseDTO(user)
     }
 
     @Transactional

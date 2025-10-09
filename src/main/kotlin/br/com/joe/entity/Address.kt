@@ -1,10 +1,14 @@
 package br.com.joe.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToMany
+import jakarta.persistence.ManyToOne
 
 @Entity
 data class Address(
@@ -26,5 +30,10 @@ data class Address(
     var bairro: String = "",
 
     @Column(name = "cep", nullable = false)
-    var cep: String = ""
+    var cep: String = "",
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    var user: User? = null
 )
