@@ -48,49 +48,49 @@ class UserController {
 
     @GetMapping("/email")
     @Operation(summary = "Busca por e-mail", description = "Efetuar a busca por e-mail")
-    fun findByEmail(@RequestParam email: String): ResponseEntity<UserVO>{
-        val userVO = service.findByEmail(email)
-        userVO.add(
+    fun findByEmail(@RequestParam email: String): ResponseEntity<UserResponseDTO>{
+        val userDTO = service.findByEmail(email)
+        userDTO.add(
             linkTo(methodOn(UserController::class.java)
-                .findByEmail(userVO.email)).withSelfRel()
+                .findByEmail(userDTO.email)).withSelfRel()
         )
-        return ResponseEntity.status(HttpStatus.OK).body(userVO)
+        return ResponseEntity.status(HttpStatus.OK).body(userDTO)
     }
 
     @GetMapping("/name")
     @Operation(summary = "Busca por nome", description = "Efetua a busca pelo nome")
-    fun findByName(@RequestParam name: String): ResponseEntity<List<UserVO>>{
-        val usersVO = service.findByName(name)
-        usersVO.forEach { userVO ->
-            userVO.add(
+    fun findByName(@RequestParam name: String): ResponseEntity<List<UserResponseDTO>>{
+        val userDTO = service.findByName(name)
+        userDTO.forEach { userDTO ->
+            userDTO.add(
                 linkTo(methodOn(
                     UserController::class.java)
-                    .findByName(userVO.name)).withSelfRel()
+                    .findByName(userDTO.name)).withSelfRel()
                 )
         }
-        return ResponseEntity.status(HttpStatus.OK).body(usersVO)
+        return ResponseEntity.status(HttpStatus.FOUND).body(userDTO)
     }
 
     @PatchMapping("/email")
     @Operation(summary = "Atualizar email")
-    fun atualizarEmmail(@RequestParam cpf: String, @RequestParam novoEmail: String): ResponseEntity<UserVO> {
-        val userUpdaterVO = service.atualizarEmail(cpf, novoEmail)
-        userUpdaterVO.add(
+    fun atualizarEmail(@RequestParam cpf: String, @RequestParam novoEmail: String): ResponseEntity<UserResponseDTO> {
+        val userUpdaterDTO = service.atualizarEmail(cpf, novoEmail)
+        userUpdaterDTO.add(
             linkTo(methodOn(UserController::class.java)
-                .atualizarEmmail(userUpdaterVO.cpf, userUpdaterVO.email)).withSelfRel()
+                .atualizarEmail(userUpdaterDTO.cpf, userUpdaterDTO.email)).withSelfRel()
         )
-        return ResponseEntity.status(HttpStatus.OK).body(userUpdaterVO)
+        return ResponseEntity.status(HttpStatus.OK).body(userUpdaterDTO)
     }
 
     @PatchMapping("/name")
     @Operation(summary = "Atualizar nome")
-    fun atualizarNome(@RequestParam cpf: String, @RequestParam novoNome: String): ResponseEntity<UserVO>{
-        val userUpdateVO = service.atualizarNome(cpf, novoNome)
-        userUpdateVO.add(
+    fun atualizarNome(@RequestParam cpf: String, @RequestParam novoNome: String): ResponseEntity<UserResponseDTO>{
+        val userUpdateDTO = service.atualizarNome(cpf, novoNome)
+        userUpdateDTO.add(
             linkTo(methodOn(UserController::class.java)
-                .atualizarNome(userUpdateVO.cpf, userUpdateVO.name)).withSelfRel()
+                .atualizarNome(userUpdateDTO.cpf, userUpdateDTO.name)).withSelfRel()
         )
-        return ResponseEntity.status(HttpStatus.OK).body(userUpdateVO)
+        return ResponseEntity.status(HttpStatus.OK).body(userUpdateDTO)
     }
 
     @GetMapping("/cpf")

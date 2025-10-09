@@ -68,17 +68,17 @@ class UserService {
     }
 
     @Transactional
-    fun findByName(name: String): List<UserVO> {
+    fun findByName(name: String): List<UserResponseDTO> {
         val users = repository.findByNameContainingIgnoreCase(name)
-            ?: throw UserNotFoundException("User not found for this $name")
-        return users.map { mapper.toUserVO(it) }
+            ?: throw UserNotFoundException("User not found!!")
+        return users.map { mapper.toUserResponseDTO(it) }
     }
 
     @Transactional
-    fun findByEmail(email: String): UserVO {
+    fun findByEmail(email: String): UserResponseDTO {
         val user = repository.findByEmail(email)
             ?: throw UserNotFoundException("User not found for this $email")
-        return mapper.toUserVO(user)
+        return mapper.toUserResponseDTO(user)
     }
 
     @Transactional
@@ -110,20 +110,20 @@ class UserService {
     }
 
     @Transactional
-    fun atualizarEmail(cpf: String, novoEmail: String): UserVO{
+    fun atualizarEmail(cpf: String, novoEmail: String): UserResponseDTO{
         val user = repository.findByCpf(cpf)
             ?: throw UserNotFoundException("User not found for this $cpf")
         user.email = novoEmail
         val userUpdater = repository.save(user)
-        return mapper.toUserVO(userUpdater)
+        return mapper.toUserResponseDTO(userUpdater)
     }
 
     @Transactional
-    fun atualizarNome(cpf: String, novoNome: String): UserVO{
+    fun atualizarNome(cpf: String, novoNome: String): UserResponseDTO{
         val user = repository.findByCpf(cpf)
             ?: throw UserNotFoundException("User not found for this $cpf")
         user.name = novoNome
         val userUpdate = repository.save(user)
-        return mapper.toUserVO(userUpdate)
+        return mapper.toUserResponseDTO(userUpdate)
     }
 }
