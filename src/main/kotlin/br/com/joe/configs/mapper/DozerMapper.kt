@@ -139,6 +139,7 @@ class DozerMapper {
         val dto = UserResponseDTO(
             id = user.id,
             name = user.name,
+            cpf = user.cpf,
             email = user.email,
             telefone = user.telefone,
             address = addressDTOs
@@ -172,6 +173,7 @@ class DozerMapper {
         return UserVO(
             id = user.id,
             name = user.name,
+            cpf = user.cpf,
             email = user.email,
             telefone = user.telefone,
             address = user.address.map { address ->
@@ -186,4 +188,25 @@ class DozerMapper {
             }
         )
     }
+
+    fun toUserResponseDTOList(users: List<User>): List<UserResponseDTO> =
+        users.map { user ->
+            UserResponseDTO(
+                id = user.id,
+                name = user.name,
+                cpf = user.cpf,
+                email = user.email,
+                telefone = user.telefone,
+                address = user.address.map { address ->
+                    AddressResponseDTO(
+                        id = address.id,
+                        logradouro = address.logradouro,
+                        numero = address.numero,
+                        complemento = address.complemento,
+                        bairro = address.bairro,
+                        cep = address.cep
+                    )
+                }
+            )
+        }
 }

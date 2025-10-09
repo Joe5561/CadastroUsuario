@@ -59,12 +59,12 @@ class UserService {
     }
 
     @Transactional
-    fun findAllUsers(): List<UserVO> {
+    fun findAllUsers(): List<UserResponseDTO> {
         val users = repository.findAll()
         if (users.isEmpty()) {
             throw UserNotFoundException("No user found!!!")
         }
-        return mapper.toUserVOList(users)
+        return mapper.toUserResponseDTOList(users)
     }
 
     @Transactional

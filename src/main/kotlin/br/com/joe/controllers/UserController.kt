@@ -35,12 +35,12 @@ class UserController {
 
     @GetMapping
     @Operation(summary = "Listar todos os usuários")
-    fun listUsers(): ResponseEntity<List<UserVO>>{
+    fun listUsers(): ResponseEntity<List<UserResponseDTO>>{
         val users = service.findAllUsers()
-        users.forEach { userVO ->
-            userVO.add(
+        users.forEach { userDTO ->
+            userDTO.add(
                 linkTo(methodOn(UserController::class.java)
-                    .findByCpf(userVO.cpf)).withSelfRel()
+                    .findByCpf(userDTO.cpf)).withSelfRel()
             )
         }
         return ResponseEntity.status(HttpStatus.OK).body(users)

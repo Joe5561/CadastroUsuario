@@ -10,4 +10,4 @@ data class AddressResponseDTO(
     var bairro: String = "",
     var cep: String = ""
 
-): RepresentationModel<AddressResponseDTO>()
+)
