@@ -43,7 +43,7 @@ class UserController {
                     .findByCpf(userDTO.cpf)).withSelfRel()
             )
         }
-        return ResponseEntity.status(HttpStatus.OK).body(users)
+        return ResponseEntity.status(HttpStatus.FOUND).body(users)
     }
 
     @GetMapping("/email")
