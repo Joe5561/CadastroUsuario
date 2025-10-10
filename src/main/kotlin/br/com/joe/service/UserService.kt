@@ -96,14 +96,15 @@ class UserService {
     }
 
     @Transactional
-    fun deleteByCpf(cpf: String): UserVO{
+    fun deleteByCpf(cpf: String): UserResponseDTO{
         val user = repository.findByCpf(cpf)
             ?: throw UserNotFoundException("User not found for this $cpf")
         if (user.vehicles.isNotEmpty()){
             throw IllegalStateException("It is not allowed to delete user with linked vehicles")
         }
         repository.delete(user)
-        return mapper.toUserVO(user)
+        val userVO =  mapper.toUserVO(user)
+        return mapper.toUserResponseDTO(userVO)
     }
 
     @Transactional

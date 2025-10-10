@@ -106,12 +106,12 @@ class UserController {
 
     @DeleteMapping("/cpf")
     @Operation(summary = "Deletar usuário por cpf")
-    fun deleteByCpf(@RequestParam cpf: String): ResponseEntity<UserVO>{
-        val deleteUserVO = service.deleteByCpf(cpf)
-        deleteUserVO.add(
+    fun deleteByCpf(@RequestParam cpf: String): ResponseEntity<UserResponseDTO>{
+        val deleteUserDTO = service.deleteByCpf(cpf)
+        deleteUserDTO.add(
             linkTo(methodOn(UserController::class.java)
-                .deleteByCpf(deleteUserVO.cpf)).withSelfRel()
+                .deleteByCpf(deleteUserDTO.cpf)).withSelfRel()
         )
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(deleteUserVO)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(deleteUserDTO)
     }
 }
