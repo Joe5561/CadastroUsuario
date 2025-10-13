@@ -2,18 +2,24 @@ package br.com.joe.configs.mapper
 
 import br.com.joe.entity.Address
 import br.com.joe.entity.Category
+import br.com.joe.entity.Product
 import br.com.joe.entity.User
 import br.com.joe.entity.Vehicle
 import br.com.joe.entity.dto.AddressCreateDTO
 import br.com.joe.entity.dto.AddressResponseDTO
+import br.com.joe.entity.dto.CategoryDTO
 import br.com.joe.entity.dto.VehicleSummaryDTO
 import br.com.joe.entity.dto.CleanVehicleDTO
+import br.com.joe.entity.dto.ProductCreateDTO
+import br.com.joe.entity.dto.ProductResponseDTO
 import br.com.joe.entity.dto.UserCreateDTO
 import br.com.joe.entity.dto.UserResponseDTO
 import br.com.joe.entity.vo.AddressVO
 import br.com.joe.entity.vo.CategoryVO
+import br.com.joe.entity.vo.ProductVO
 import br.com.joe.entity.vo.UserVO
 import br.com.joe.entity.vo.VehicleVO
+import br.com.joe.enums.ProductStatus
 import com.github.dozermapper.core.Mapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -262,4 +268,55 @@ class DozerMapper {
     fun toCategoriaList(categoriaVOs: List<CategoryVO>): List<Category> {
         return categoriaVOs.map { mapper.map(it, Category::class.java) }
     }
+
+    fun toProductResponseDTO(product: Product): ProductResponseDTO {
+        val categoriaDTO = product.categoria.map {
+            CategoryDTO(id = it.id, nome = it.categoria)
+        }
+
+        return ProductResponseDTO(
+            id = product.id,
+            nome = product.nome,
+            descricao = product.descricao,
+            preco = product.preco.toDouble(),
+            quantidadeEstoque = product.quantidadeEstoque,
+            status = product.status.name,
+            categoria = categoriaDTO
+        )
+    }
+
+    fun toProductVO(product: Product): ProductVO {
+        val categoriasVO = product.categoria.map {
+            CategoryVO(
+                id = it.id,
+                categoria = it.categoria
+            )
+        }
+
+        return ProductVO(
+            id = product.id,
+            nome = product.nome,
+            descricao = product.descricao,
+            preco = product.preco.toDouble(),
+            quantidadeEstoque = product.quantidadeEstoque,
+            status = product.status.name,
+            categoria = categoriasVO
+        )
+    }
+
+    fun toProductFromCreateDTO(dto: ProductCreateDTO, categorias: List<Category>): Product {
+        return Product(
+            nome = dto.nome,
+            descricao = dto.descricao,
+            preco = dto.preco.toBigDecimal(),
+            quantidadeEstoque = dto.quantidadeEstoque,
+            status = ProductStatus.valueOf(dto.status.uppercase()),
+            categoria = categorias.toMutableSet()
+        )
+    }
+
+    fun toProductVOList(products: List<Product>): List<ProductVO> {
+        return products.map { toProductVO(it) }
+    }
+
 }
