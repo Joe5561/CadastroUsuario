@@ -1,6 +1,7 @@
 package br.com.joe.configs.mapper
 
 import br.com.joe.entity.Address
+import br.com.joe.entity.Category
 import br.com.joe.entity.User
 import br.com.joe.entity.Vehicle
 import br.com.joe.entity.dto.AddressCreateDTO
@@ -10,6 +11,7 @@ import br.com.joe.entity.dto.CleanVehicleDTO
 import br.com.joe.entity.dto.UserCreateDTO
 import br.com.joe.entity.dto.UserResponseDTO
 import br.com.joe.entity.vo.AddressVO
+import br.com.joe.entity.vo.CategoryVO
 import br.com.joe.entity.vo.UserVO
 import br.com.joe.entity.vo.VehicleVO
 import com.github.dozermapper.core.Mapper
@@ -243,5 +245,21 @@ class DozerMapper {
                 }
             )
         }
+    }
+
+    fun toCategoria(categoryVO: CategoryVO): Category {
+        return mapper.map(categoryVO, Category::class.java)
+    }
+
+    fun toCategoriaVO(category: Category): CategoryVO {
+        return mapper.map(category, CategoryVO::class.java)
+    }
+
+    fun toCategoriaVOList(categorias: List<Category>): List<CategoryVO> {
+        return categorias.map { mapper.map(it, CategoryVO::class.java) }
+    }
+
+    fun toCategoriaList(categoriaVOs: List<CategoryVO>): List<Category> {
+        return categoriaVOs.map { mapper.map(it, Category::class.java) }
     }
 }
