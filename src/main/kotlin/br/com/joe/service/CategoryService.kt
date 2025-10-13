@@ -2,6 +2,7 @@ package br.com.joe.service
 
 import br.com.joe.configs.mapper.DozerMapper
 import br.com.joe.entity.vo.CategoryVO
+import br.com.joe.exception.ExistingCategoryException
 import br.com.joe.repository.CategoryRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,6 +21,10 @@ class CategoryService {
     fun saveCategory(categoryVO: CategoryVO): CategoryVO{
         val categoria = mapper.toCategoria(categoryVO)
         categoria.categoria = categoria.categoria.uppercase()
+        val existCategory = categoryRepository.findByCategoria(categoryVO.categoria)
+        if (existCategory != null){
+            throw ExistingCategoryException("Category already registered!!")
+        }
         val saveCategoria = categoryRepository.save(categoria)
         return mapper.toCategoriaVO(saveCategoria)
     }
