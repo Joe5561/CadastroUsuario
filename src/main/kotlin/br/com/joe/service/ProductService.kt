@@ -30,11 +30,11 @@ class ProductService {
     @Transactional
     fun saveProduct(dto: ProductCreateDTO): ProductResponseDTO {
         if (productRepository.existsByNome(dto.nome)) {
-            throw ProductAlreadyExistsException("Produto com nome '${dto.nome}' já está cadastrado.")
+            throw ProductAlreadyExistsException("Product with name '${dto.nome}' is already registered.")
         }
         val categoria = categoryRepository.findAllById(dto.categoria)
         if (categoria.size != dto.categoria.size) {
-            throw CategoryNotFoundException("Uma ou mais categorias não foram encontradas")
+            throw CategoryNotFoundException("One or more categories were not found.")
         }
         val product = mapper.toProductFromCreateDTO(dto, categoria)
         val savedProduct = productRepository.save(product)

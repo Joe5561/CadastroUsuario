@@ -318,5 +318,4 @@ class DozerMapper {
     fun toProductVOList(products: List<Product>): List<ProductVO> {
         return products.map { toProductVO(it) }
     }
-
 }
