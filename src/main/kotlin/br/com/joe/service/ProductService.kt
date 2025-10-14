@@ -8,8 +8,10 @@ import br.com.joe.entity.dto.ProductResponseDTO
 import br.com.joe.entity.vo.ProductVO
 import br.com.joe.enums.ProductStatus
 import br.com.joe.exception.CategoryNotFoundException
+import br.com.joe.exception.ProductAlreadyExistsException
 import br.com.joe.repository.CategoryRepository
 import br.com.joe.repository.ProductRepository
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -25,29 +27,24 @@ class ProductService {
     @Autowired
     private lateinit var categoryRepository: CategoryRepository
 
-
+    @Transactional
     fun saveProduct(dto: ProductCreateDTO): ProductResponseDTO {
-        val categorias = categoryRepository.findAllById(dto.categoria)
-
-        if (categorias.size != dto.categoria.size) {
+        val categoria = categoryRepository.findAllById(dto.categoria)
+        if (categoria.size != dto.categoria.size) {
             throw CategoryNotFoundException("Uma ou mais categorias não foram encontradas")
         }
-
         val product = Product(
             nome = dto.nome,
             descricao = dto.descricao,
             preco = dto.preco.toBigDecimal(),
             quantidadeEstoque = dto.quantidadeEstoque,
             status = ProductStatus.valueOf(dto.status.uppercase()),
-            categoria = categorias.toCollection(LinkedHashSet())
+            categoria = categoria.distinctBy { it.id }.toMutableList()
         )
-
         val saved = productRepository.save(product)
-
         val categoriaDTO = saved.categoria.map {
             CategoryDTO(id = it.id, nome = it.categoria)
         }
-
         return ProductResponseDTO(
             id = saved.id,
             nome = saved.nome,

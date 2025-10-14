@@ -311,7 +311,7 @@ class DozerMapper {
             preco = dto.preco.toBigDecimal(),
             quantidadeEstoque = dto.quantidadeEstoque,
             status = ProductStatus.valueOf(dto.status.uppercase()),
-            categoria = categorias.toMutableSet()
+            categoria = categorias.toMutableList()
         )
     }
 

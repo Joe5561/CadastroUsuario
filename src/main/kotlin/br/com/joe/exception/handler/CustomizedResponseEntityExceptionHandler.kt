@@ -9,6 +9,8 @@ import br.com.joe.exception.ExistingBoardException
 import br.com.joe.exception.ExistingCategoryException
 import br.com.joe.exception.ExistingNumberException
 import br.com.joe.exception.PhoneInvalidException
+import br.com.joe.exception.ProductAlreadyExistsException
+import br.com.joe.exception.ProductNotFoundException
 import br.com.joe.exception.ResourceNotFoundException
 import br.com.joe.exception.UserConflictException
 import br.com.joe.exception.UserNotFoundException
@@ -220,5 +222,17 @@ class CustomizedResponseEntityExceptionHandler: ResponseEntityExceptionHandler()
             request.getDescription(false)
         )
         return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(ProductAlreadyExistsException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    fun handleProductAlreadyExistsException(ex: Exception, request: WebRequest):
+            ResponseEntity<ExceptionResponse> {
+        val exceptionResponse = ExceptionResponse(
+            Date(),
+            ex.message,
+            request.getDescription(false)
+        )
+        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.CONFLICT)
     }
 }

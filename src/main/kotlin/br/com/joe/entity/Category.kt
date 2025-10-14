@@ -22,7 +22,7 @@ data class Category(
     var categoria: String = "",
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "categoria", fetch = FetchType.EAGER)
-    var produtos: MutableSet<Product> = mutableSetOf()
+    @ManyToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
+    var produtos: MutableList<Product> = mutableListOf()
 
 )
