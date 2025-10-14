@@ -30,6 +30,9 @@ class ProductController {
     @Operation(summary = "Cadastrar produtos", description = "Efetuar o cadastro de produtos")
     fun saveProduct(@RequestBody productCreateDTO: ProductCreateDTO): ResponseEntity<ProductResponseDTO>{
         val response = productService.saveProduct(productCreateDTO)
+        response.add(linkTo(
+            methodOn(ProductController::class.java)
+                .saveProduct(productCreateDTO)).withSelfRel())
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 }
