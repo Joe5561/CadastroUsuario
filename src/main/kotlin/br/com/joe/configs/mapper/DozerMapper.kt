@@ -269,18 +269,18 @@ class DozerMapper {
         return categoriaVOs.map { mapper.map(it, Category::class.java) }
     }
 
-    fun toProductResponseDTO(product: Product): ProductResponseDTO {
-        val categoriaDTO = product.categoria.map {
+    fun toProductResponseDTO(productVO: ProductVO): ProductResponseDTO {
+        val categoriaDTO = productVO.categoria.map {
             CategoryDTO(id = it.id, nome = it.categoria)
         }
 
         return ProductResponseDTO(
-            id = product.id,
-            nome = product.nome,
-            descricao = product.descricao,
-            preco = product.preco.toDouble(),
-            quantidadeEstoque = product.quantidadeEstoque,
-            status = product.status.name,
+            id = productVO.id,
+            nome = productVO.nome,
+            descricao = productVO.descricao,
+            preco = productVO.preco.toDouble(),
+            quantidadeEstoque = productVO.quantidadeEstoque,
+            status = productVO.status,
             categoria = categoriaDTO
         )
     }

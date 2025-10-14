@@ -32,34 +32,13 @@ class ProductService {
         if (productRepository.existsByNome(dto.nome)) {
             throw ProductAlreadyExistsException("Produto com nome '${dto.nome}' já está cadastrado.")
         }
-
         val categoria = categoryRepository.findAllById(dto.categoria)
         if (categoria.size != dto.categoria.size) {
             throw CategoryNotFoundException("Uma ou mais categorias não foram encontradas")
         }
-        val product = Product(
-            nome = dto.nome,
-            descricao = dto.descricao,
-            preco = dto.preco.toBigDecimal(),
-            quantidadeEstoque = dto.quantidadeEstoque,
-            status = ProductStatus.valueOf(dto.status.uppercase()),
-            categoria = categoria.distinctBy { it.id }.toMutableList()
-        )
-
-        val saved = productRepository.save(product)
-
-        val categoriaDTO = saved.categoria.map {
-            CategoryDTO(id = it.id, nome = it.categoria)
-        }
-
-        return ProductResponseDTO(
-            id = saved.id,
-            nome = saved.nome,
-            descricao = saved.descricao,
-            preco = saved.preco.toDouble(),
-            quantidadeEstoque = saved.quantidadeEstoque,
-            status = saved.status.name,
-            categoria = categoriaDTO
-        )
+        val product = mapper.toProductFromCreateDTO(dto, categoria)
+        val savedProduct = productRepository.save(product)
+        val productVO = mapper.toProductVO(savedProduct)
+        return mapper.toProductResponseDTO(productVO)
     }
 }
