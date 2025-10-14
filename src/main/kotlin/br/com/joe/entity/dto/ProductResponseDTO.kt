@@ -10,5 +10,5 @@ data class ProductResponseDTO(
     var preco: Double = 0.0,
     var quantidadeEstoque: Int = 0,
     var status: String = "",
-    val categoria: List<CategoryDTO>
+    var categoria: List<CategoryDTO>
 ): RepresentationModel<ProductResponseDTO>()

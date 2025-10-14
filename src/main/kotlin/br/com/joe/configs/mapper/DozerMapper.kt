@@ -286,7 +286,7 @@ class DozerMapper {
     }
 
     fun toProductVO(product: Product): ProductVO {
-        val categoriasVO = product.categoria.map {
+        val categoriaVO = product.categoria.map {
             CategoryVO(
                 id = it.id,
                 categoria = it.categoria
@@ -300,7 +300,7 @@ class DozerMapper {
             preco = product.preco.toDouble(),
             quantidadeEstoque = product.quantidadeEstoque,
             status = product.status.name,
-            categoria = categoriasVO
+            categoria = categoriaVO
         )
     }
 
