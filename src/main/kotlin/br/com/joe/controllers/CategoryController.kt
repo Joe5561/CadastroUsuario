@@ -1,5 +1,7 @@
 package br.com.joe.controllers
 
+import br.com.joe.entity.dto.CategoriaUpdateRequestDTO
+import br.com.joe.entity.dto.CategoryResponseDTO
 import br.com.joe.entity.vo.CategoryVO
 import br.com.joe.service.CategoryService
 import io.swagger.v3.oas.annotations.Operation
@@ -11,6 +13,7 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -47,5 +50,17 @@ class CategoryController {
             )
         }
         return ResponseEntity.status(HttpStatus.FOUND).body(category)
+    }
+
+    @PatchMapping("novoCategoria")
+    @Operation(summary = "Category update")
+    fun atualizarCategoria(@RequestBody request: CategoriaUpdateRequestDTO): ResponseEntity<CategoryResponseDTO>{
+        val categoryUpdater = categoryService.atualizarCategoria(request.categoria, request.novoCategoria)
+        categoryUpdater.add(
+            linkTo(
+                methodOn(CategoryController::class.java)
+                .atualizarCategoria(request)).withSelfRel()
+        )
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(categoryUpdater)
     }
 }

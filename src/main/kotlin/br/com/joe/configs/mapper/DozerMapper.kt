@@ -8,6 +8,7 @@ import br.com.joe.entity.Vehicle
 import br.com.joe.entity.dto.AddressCreateDTO
 import br.com.joe.entity.dto.AddressResponseDTO
 import br.com.joe.entity.dto.CategoryDTO
+import br.com.joe.entity.dto.CategoryResponseDTO
 import br.com.joe.entity.dto.VehicleSummaryDTO
 import br.com.joe.entity.dto.CleanVehicleDTO
 import br.com.joe.entity.dto.ProductCreateDTO
@@ -188,6 +189,13 @@ class DozerMapper {
         )
 
         return dto
+    }
+
+    fun toCategoryResponseDTO(categoryVO: CategoryVO): CategoryResponseDTO{
+        return CategoryResponseDTO(
+            id = categoryVO.id,
+            categoria = categoryVO.categoria
+        )
     }
 
     fun toAddressFromCreateDTO(dto: AddressCreateDTO): Address {

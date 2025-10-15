@@ -1,6 +1,7 @@
 package br.com.joe.service
 
 import br.com.joe.configs.mapper.DozerMapper
+import br.com.joe.entity.dto.CategoryResponseDTO
 import br.com.joe.entity.vo.CategoryVO
 import br.com.joe.exception.CategoryNotFoundException
 import br.com.joe.exception.ExistingCategoryException
@@ -37,5 +38,15 @@ class CategoryService {
             CategoryNotFoundException("Category not found!!")
         }
         return mapper.toCategoriaVOList(category)
+    }
+
+    @Transactional
+    fun atualizarCategoria(categoria: String, novoCategoria: String): CategoryResponseDTO {
+        val category = categoryRepository.findByCategoria(categoria)
+            ?: throw CategoryNotFoundException("Category not found for this $categoria")
+        category.categoria = novoCategoria
+        val categoryUpdate = categoryRepository.save(category)
+        val categoryVO = mapper.toCategoriaVO(categoryUpdate)
+        return mapper.toCategoryResponseDTO(categoryVO)
     }
 }
