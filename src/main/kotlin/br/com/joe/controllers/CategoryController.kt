@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -62,5 +63,19 @@ class CategoryController {
                 .atualizarCategoria(request)).withSelfRel()
         )
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(categoryUpdater)
+    }
+
+    @GetMapping("findByCategory")
+    @Operation(summary = "Find category")
+    fun findByCategory(@RequestParam categoria: String): ResponseEntity<List<CategoryResponseDTO>>{
+        val categoryDTOList = categoryService.findByCategory(categoria.uppercase())
+        categoryDTOList.forEach { dto ->
+            dto.add(
+                linkTo(
+                    methodOn(CategoryController::class.java)
+                        .findByCategory(dto.categoria)).withSelfRel()
+            )
+        }
+        return ResponseEntity.status(HttpStatus.FOUND).body(categoryDTOList)
     }
 }

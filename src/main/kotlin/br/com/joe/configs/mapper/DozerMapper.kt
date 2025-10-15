@@ -198,6 +198,15 @@ class DozerMapper {
         )
     }
 
+    fun toCategoryResponseDTOList(categoryVOs: List<CategoryVO>): List<CategoryResponseDTO> {
+        return categoryVOs.map {
+            CategoryResponseDTO(
+                id = it.id,
+                categoria = it.categoria
+            )
+        }
+    }
+
     fun toAddressFromCreateDTO(dto: AddressCreateDTO): Address {
         return Address(
             logradouro = dto.logradouro,

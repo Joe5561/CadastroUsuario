@@ -51,4 +51,12 @@ class CategoryService {
         val categoryVO = mapper.toCategoriaVO(categoryUpdate)
         return mapper.toCategoryResponseDTO(categoryVO)
     }
+
+    @Transactional
+    fun findByCategory(categoria: String): List<CategoryResponseDTO>{
+        val category = categoryRepository.findByCategoriaContainingIgnoreCase(categoria)
+            ?:throw CategoryNotFoundException("Category not found for this $categoria")
+        val categoryVO = mapper.toCategoriaVOList(category)
+        return mapper.toCategoryResponseDTOList(categoryVO)
+    }
 }
