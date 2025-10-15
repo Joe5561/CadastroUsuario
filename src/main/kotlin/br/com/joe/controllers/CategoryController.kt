@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -24,12 +25,27 @@ class CategoryController {
 
     @PostMapping
     @Operation(summary = "Cadastrar categorias", description = "Efetuar o cadastro de categorias")
-    fun saveCategory(@RequestBody categoryVO: CategoryVO): ResponseEntity<CategoryVO>{
+    fun saveCategory(@RequestBody categoryVO: CategoryVO): ResponseEntity<CategoryVO> {
         val savedCategoryVO = categoryService.saveCategory(categoryVO)
         savedCategoryVO.add(
-            linkTo(methodOn(CategoryController::class.java)
-                .saveCategory(savedCategoryVO)).withSelfRel()
+            linkTo(
+                methodOn(CategoryController::class.java)
+                    .saveCategory(savedCategoryVO)).withSelfRel()
         )
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategoryVO)
+    }
+
+    @GetMapping
+    @Operation(summary = "Buscar todas as categorias", description = "Efetuar a busca de todas as categorias")
+    fun findAllCategory(): ResponseEntity<List<CategoryVO>> {
+        val category = categoryService.findAllCategory()
+        category.forEach { categoryVO ->
+            categoryVO.add(
+                linkTo(
+                    methodOn(CategoryController::class.java)
+                        .findAllCategory()).withSelfRel()
+            )
+        }
+        return ResponseEntity.status(HttpStatus.FOUND).body(category)
     }
 }

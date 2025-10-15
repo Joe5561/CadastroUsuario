@@ -2,6 +2,7 @@ package br.com.joe.service
 
 import br.com.joe.configs.mapper.DozerMapper
 import br.com.joe.entity.vo.CategoryVO
+import br.com.joe.exception.CategoryNotFoundException
 import br.com.joe.exception.ExistingCategoryException
 import br.com.joe.repository.CategoryRepository
 import jakarta.transaction.Transactional
@@ -27,5 +28,14 @@ class CategoryService {
         }
         val saveCategoria = categoryRepository.save(categoria)
         return mapper.toCategoriaVO(saveCategoria)
+    }
+
+    @Transactional
+    fun findAllCategory(): List<CategoryVO>{
+        val category = categoryRepository.findAll()
+        if (category.isEmpty()){
+            CategoryNotFoundException("Category not found!!")
+        }
+        return mapper.toCategoriaVOList(category)
     }
 }
