@@ -42,9 +42,11 @@ class CategoryService {
 
     @Transactional
     fun atualizarCategoria(categoria: String, novoCategoria: String): CategoryResponseDTO {
-        val category = categoryRepository.findByCategoria(categoria)
+        val categoriaUpper = categoria.uppercase()
+        val novoCategoriaUpper = novoCategoria.uppercase()
+        val category = categoryRepository.findByCategoria(categoriaUpper)
             ?: throw CategoryNotFoundException("Category not found for this $categoria")
-        category.categoria = novoCategoria
+        category.categoria = novoCategoriaUpper
         val categoryUpdate = categoryRepository.save(category)
         val categoryVO = mapper.toCategoriaVO(categoryUpdate)
         return mapper.toCategoryResponseDTO(categoryVO)
