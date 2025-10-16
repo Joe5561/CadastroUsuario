@@ -11,6 +11,7 @@ import br.com.joe.entity.vo.ProductVO
 import br.com.joe.enums.ProductStatus
 import br.com.joe.exception.CategoryNotFoundException
 import br.com.joe.exception.ProductAlreadyExistsException
+import br.com.joe.exception.ProductNotFoundException
 import br.com.joe.repository.CategoryRepository
 import br.com.joe.repository.ProductRepository
 import jakarta.transaction.Transactional
@@ -65,5 +66,17 @@ class ProductService {
             )
         }
         return mapper.toProductResponseDTOList(productVOList)
+    }
+
+    @Transactional
+    fun deleteProduct(id: Long): ProductResponseDTO{
+        val produto = productRepository.findById(id)
+            .orElseThrow { ProductNotFoundException("Product not found!!") }
+        produto.categoria.clear()
+        val produtoDesassociado = productRepository.save(produto)
+        productRepository.delete(produtoDesassociado)
+
+        val produtoVO = mapper.toProductVO(produtoDesassociado)
+        return mapper.toProductResponseDTO(produtoVO)
     }
 }

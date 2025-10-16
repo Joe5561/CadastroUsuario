@@ -3,15 +3,16 @@ package br.com.joe.controllers
 import br.com.joe.entity.dto.ProductCreateDTO
 import br.com.joe.entity.dto.ProductResponseDTO
 import br.com.joe.entity.dto.ProductResponseDTOList
-import br.com.joe.entity.vo.ProductVO
 import br.com.joe.service.ProductService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.hateoas.EntityModel
 import org.springframework.http.ResponseEntity
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -56,5 +57,14 @@ class ProductController {
             }
         }
         return ResponseEntity.status(HttpStatus.FOUND).body(products)
+    }
+
+    @DeleteMapping("{id}")
+    @Operation(summary = "Apagar produto por id")
+    fun deleteProduct(@PathVariable id: Long): ResponseEntity<EntityModel<ProductResponseDTO>>{
+        val productResponse = productService.deleteProduct(id)
+        val selfLink = linkTo(ProductController::class.java).slash(id).withSelfRel()
+        val model = EntityModel.of(productResponse, selfLink)
+        return ResponseEntity.status(HttpStatus.OK).body(model)
     }
 }
