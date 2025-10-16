@@ -6,6 +6,7 @@ import br.com.joe.entity.dto.CategoryDTO
 import br.com.joe.entity.dto.ProductCreateDTO
 import br.com.joe.entity.dto.ProductResponseDTO
 import br.com.joe.entity.dto.ProductResponseDTOList
+import br.com.joe.entity.dto.ProductStatusUpdateDTO
 import br.com.joe.entity.vo.CategoryVO
 import br.com.joe.entity.vo.ProductVO
 import br.com.joe.enums.ProductStatus
@@ -77,6 +78,16 @@ class ProductService {
         productRepository.delete(produtoDesassociado)
 
         val produtoVO = mapper.toProductVO(produtoDesassociado)
+        return mapper.toProductResponseDTO(produtoVO)
+    }
+
+    @Transactional
+    fun updateStatus(dto: ProductStatusUpdateDTO): ProductResponseDTO{
+        val produto = productRepository.findById(dto.id)
+            .orElseThrow { ProductNotFoundException("Product not found!!") }
+        produto.status = dto.status
+        val produtoAtualizado = productRepository.save(produto)
+        val produtoVO = mapper.toProductVO(produtoAtualizado)
         return mapper.toProductResponseDTO(produtoVO)
     }
 }
