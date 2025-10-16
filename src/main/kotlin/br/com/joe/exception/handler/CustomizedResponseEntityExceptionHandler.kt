@@ -1,6 +1,7 @@
 package br.com.joe.exception.handler
 
 import br.com.joe.exception.AddressNotFoundException
+import br.com.joe.exception.AssociatedCategoryException
 import br.com.joe.exception.CategoryNotFoundException
 import br.com.joe.exception.CpfCnpjInvalidException
 import br.com.joe.exception.EmailInvalidException
@@ -227,6 +228,18 @@ class CustomizedResponseEntityExceptionHandler: ResponseEntityExceptionHandler()
     @ExceptionHandler(ProductAlreadyExistsException::class)
     @ResponseStatus(HttpStatus.CONFLICT)
     fun handleProductAlreadyExistsException(ex: Exception, request: WebRequest):
+            ResponseEntity<ExceptionResponse> {
+        val exceptionResponse = ExceptionResponse(
+            Date(),
+            ex.message,
+            request.getDescription(false)
+        )
+        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.CONFLICT)
+    }
+
+    @ExceptionHandler(AssociatedCategoryException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    fun handleAssociatedCategoryException(ex: Exception, request: WebRequest):
             ResponseEntity<ExceptionResponse> {
         val exceptionResponse = ExceptionResponse(
             Date(),

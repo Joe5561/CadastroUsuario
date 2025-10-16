@@ -3,9 +3,11 @@ package br.com.joe.service
 import br.com.joe.configs.mapper.DozerMapper
 import br.com.joe.entity.dto.CategoryResponseDTO
 import br.com.joe.entity.vo.CategoryVO
+import br.com.joe.exception.AssociatedCategoryException
 import br.com.joe.exception.CategoryNotFoundException
 import br.com.joe.exception.ExistingCategoryException
 import br.com.joe.repository.CategoryRepository
+import br.com.joe.repository.ProductRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -15,6 +17,9 @@ class CategoryService {
 
     @Autowired
     private lateinit var categoryRepository: CategoryRepository
+
+    @Autowired
+    private lateinit var productRepository: ProductRepository
 
     @Autowired
     private lateinit var mapper: DozerMapper
@@ -58,5 +63,17 @@ class CategoryService {
             ?:throw CategoryNotFoundException("Category not found for this $categoria")
         val categoryVO = mapper.toCategoriaVOList(category)
         return mapper.toCategoryResponseDTOList(categoryVO)
+    }
+
+    @Transactional
+    fun deleteCategory(id: Long){
+        val categoria = categoryRepository.findById(id)
+            .orElseThrow { CategoryNotFoundException("Category not found for this $id") }
+        val associatedProducts = productRepository.existsByCategoriaContaining(categoria)
+        if (associatedProducts == true){
+            throw AssociatedCategoryException("It is not possible to delete the category $id" +
+                    " since it is associated with products")
+        }
+        categoryRepository.delete(categoria)
     }
 }
