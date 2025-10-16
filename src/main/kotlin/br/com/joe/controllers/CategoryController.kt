@@ -89,6 +89,6 @@ class CategoryController {
         val body = mapOf("message" to "Category with ID $id deleted successfully")
         val selfLink = linkTo(CategoryController::class.java).slash(id).withSelfRel()
         val model = EntityModel.of(body, selfLink)
-        return ResponseEntity.ok(model)
+        return ResponseEntity.status(HttpStatus.OK).body(model)
     }
 }
