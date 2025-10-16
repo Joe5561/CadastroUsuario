@@ -91,4 +91,12 @@ class ProductService {
         val produtoVO = mapper.toProductVO(produtoAtualizado)
         return mapper.toProductResponseDTO(produtoVO)
     }
+
+    @Transactional
+    fun findById(id: Long): ProductResponseDTO{
+        val produto = productRepository.findById(id)
+            .orElseThrow { ProductNotFoundException("Product not found!!") }
+        val produtoVO = mapper.toProductVO(produto)
+        return mapper.toProductResponseDTO(produtoVO)
+    }
 }

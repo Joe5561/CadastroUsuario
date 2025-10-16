@@ -78,4 +78,13 @@ class ProductController {
         val model = EntityModel.of(produtoResponse, selfLink)
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(model)
     }
+
+    @GetMapping("{id}")
+    @Operation(summary = "Buscar produto por id")
+    fun findById(@PathVariable id: Long): ResponseEntity<EntityModel<ProductResponseDTO>>{
+        val produto = productService.findById(id)
+        val selfLink = linkTo(ProductController::class.java).slash(id).withSelfRel()
+        val model = EntityModel.of(produto, selfLink)
+        return ResponseEntity.status(HttpStatus.FOUND).body(model)
+    }
 }
