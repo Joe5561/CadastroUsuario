@@ -112,6 +112,6 @@ class UserController {
             linkTo(methodOn(UserController::class.java)
                 .deleteByCpf(deleteUserDTO.cpf)).withSelfRel()
         )
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(deleteUserDTO)
+        return ResponseEntity.status(HttpStatus.OK).body(deleteUserDTO)
     }
 }
