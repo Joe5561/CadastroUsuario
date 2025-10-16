@@ -1,24 +1,24 @@
-# 🚗 Cadastro de Usuários e Veículos de Condomínio
-
-Esta API foi desenvolvida para gerenciar moradores e seus veículos em um condomínio.  
-Ela permite o cadastro de pessoas, o registro de veículos e a vinculação entre ambos, garantindo uma gestão eficiente e segura dos dados.
+🛍️ API de Loja Virtual
+Esta API foi desenvolvida para gerenciar produtos, categorias e os seus relacionamentos numa loja virtual. Ela permite o cadastro de itens, organização por categorias e navegação entre recursos via HATEOAS, garantindo uma gestão eficiente e segura dos dados.
 
 ## 📌 Funcionalidades
 
-- Cadastro de moradores
-- Cadastro de veículos
-- Vinculação de veículos aos seus respectivos moradores
-- Desvinculação de veículos
-- Busca por nome do morador (flexível, aceita nome parcial)
-- Listagem de todos os moradores e veículos
+- Cadastro de produtos
+- Cadastro de categorias
+- Vinculação de produtos às suas categorias
+- Listagem de produtos com as suas respectivas categorias
+- Busca de produtos por nome (flexível, aceita nome parcial)
+- Exclusão de categorias com validação de associação
+- Retorno de links HATEOAS para navegação entre recursos
 - Validações e tratamento de exceções
 
 ## 🧠 Regras de negócio
 
-- Moradores sem veículos possuem apenas seu próprio cadastro
-- Moradores com veículos possuem cadastro pessoal e de seus veículos
-- Cada veículo é vinculado a um único morador
-- A busca por nome aceita apenas o primeiro nome ou parte do nome
+- Cada produto pode estar vinculado a uma ou mais categorias
+- Cada categoria pode conter vários produtos
+- Não é permitido excluir uma categoria que esteja associada a produtos
+- A busca por nome de produto aceita nome parcial
+- Todas as respostas relevantes incluem links HATEOAS para facilitar a navegação
 
 ## 🛠️ Tecnologias utilizadas
 
