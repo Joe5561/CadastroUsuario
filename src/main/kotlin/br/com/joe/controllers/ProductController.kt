@@ -2,6 +2,7 @@ package br.com.joe.controllers
 
 import br.com.joe.entity.dto.ProductCreateDTO
 import br.com.joe.entity.dto.ProductResponseDTO
+import br.com.joe.entity.dto.ProductResponseDTOList
 import br.com.joe.entity.vo.ProductVO
 import br.com.joe.service.ProductService
 import io.swagger.v3.oas.annotations.Operation
@@ -34,5 +35,26 @@ class ProductController {
             methodOn(ProductController::class.java)
                 .saveProduct(productCreateDTO)).withSelfRel())
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
+    }
+
+    @GetMapping
+    @Operation(summary = "Buscar todos produtos")
+    fun findAllProductWithCategories(): ResponseEntity<List<ProductResponseDTOList>>{
+        val products = productService.findAllProductWithCategories()
+        products.forEach { productDTO ->
+            productDTO.add(
+                linkTo(
+                    methodOn(ProductController::class.java)
+                        .findAllProductWithCategories()).withSelfRel()
+                )
+            productDTO.categoria.forEach { categoryResponseDTO ->
+                categoryResponseDTO.add(
+                    linkTo(
+                        methodOn(CategoryController::class.java)
+                            .findAllCategory()).withSelfRel()
+                    )
+            }
+        }
+        return ResponseEntity.status(HttpStatus.FOUND).body(products)
     }
 }

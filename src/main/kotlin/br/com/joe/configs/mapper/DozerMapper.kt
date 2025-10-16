@@ -13,6 +13,7 @@ import br.com.joe.entity.dto.VehicleSummaryDTO
 import br.com.joe.entity.dto.CleanVehicleDTO
 import br.com.joe.entity.dto.ProductCreateDTO
 import br.com.joe.entity.dto.ProductResponseDTO
+import br.com.joe.entity.dto.ProductResponseDTOList
 import br.com.joe.entity.dto.UserCreateDTO
 import br.com.joe.entity.dto.UserResponseDTO
 import br.com.joe.entity.vo.AddressVO
@@ -301,6 +302,24 @@ class DozerMapper {
             categoria = categoriaDTO
         )
     }
+
+    fun toProductResponseDTOList(productVOList: List<ProductVO>): List<ProductResponseDTOList> =
+        productVOList.map { productVO ->
+            ProductResponseDTOList(
+                id = productVO.id,
+                nome = productVO.nome,
+                descricao = productVO.descricao,
+                preco = productVO.preco,
+                quantidadeEstoque = productVO.quantidadeEstoque,
+                status = productVO.status,
+                categoria = productVO.categoria.map { categoryVO ->
+                    CategoryResponseDTO(
+                        id = categoryVO.id,
+                        categoria = categoryVO.categoria
+                    )
+                }
+            )
+        }
 
     fun toProductVO(product: Product): ProductVO {
         val categoriaVO = product.categoria.map {

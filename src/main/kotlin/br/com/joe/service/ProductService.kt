@@ -5,6 +5,8 @@ import br.com.joe.entity.Product
 import br.com.joe.entity.dto.CategoryDTO
 import br.com.joe.entity.dto.ProductCreateDTO
 import br.com.joe.entity.dto.ProductResponseDTO
+import br.com.joe.entity.dto.ProductResponseDTOList
+import br.com.joe.entity.vo.CategoryVO
 import br.com.joe.entity.vo.ProductVO
 import br.com.joe.enums.ProductStatus
 import br.com.joe.exception.CategoryNotFoundException
@@ -40,5 +42,28 @@ class ProductService {
         val savedProduct = productRepository.save(product)
         val productVO = mapper.toProductVO(savedProduct)
         return mapper.toProductResponseDTO(productVO)
+    }
+
+    @Transactional
+    fun findAllProductWithCategories(): List<ProductResponseDTOList>{
+        val products = productRepository.findAll()
+        val productVOList = products.map { product ->
+            val categoriaVOList = product.categoria.map { category ->
+                CategoryVO(
+                    id = category.id,
+                    categoria = category.categoria
+                )
+            }
+            ProductVO(
+                id = product.id,
+                nome = product.nome,
+                descricao = product.descricao,
+                preco = product.preco.toDouble(),
+                quantidadeEstoque = product.quantidadeEstoque,
+                status = product.status.toString(),
+                categoria = categoriaVOList
+            )
+        }
+        return mapper.toProductResponseDTOList(productVOList)
     }
 }
