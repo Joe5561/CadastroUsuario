@@ -85,7 +85,8 @@ class ProductService {
     fun updateStatus(dto: ProductStatusUpdateDTO): ProductResponseDTO{
         val produto = productRepository.findById(dto.id)
             .orElseThrow { ProductNotFoundException("Product not found!!") }
-        produto.status = dto.status
+        val statusEnum = ProductStatus.valueOf(dto.status.uppercase())
+        produto.status = statusEnum
         val produtoAtualizado = productRepository.save(produto)
         val produtoVO = mapper.toProductVO(produtoAtualizado)
         return mapper.toProductResponseDTO(produtoVO)

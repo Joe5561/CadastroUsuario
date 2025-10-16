@@ -4,5 +4,5 @@ import br.com.joe.enums.ProductStatus
 
 data class ProductStatusUpdateDTO(
     var id: Long = 0,
-    var status: ProductStatus
+    var status: String
 )
