@@ -7,6 +7,7 @@ import br.com.joe.entity.dto.PedidoResponseDTO
 import br.com.joe.entity.vo.AddressVO
 import br.com.joe.entity.vo.ProductVO
 import br.com.joe.entity.vo.UserVO
+import br.com.joe.enums.StatusPedido
 import br.com.joe.repository.PedidoRepository
 import br.com.joe.repository.ProductRepository
 import br.com.joe.utils.PedidoUtils
@@ -74,13 +75,15 @@ class PedidoService {
             val pedidoEntity = Pedido(
                 numeroPedido = numeroPedido,
                 userJson = userJson,
-                produtosJson = produtosJson
+                produtosJson = produtosJson,
+                status = StatusPedido.RECEBIDO
             )
             pedidoRepository.save(pedidoEntity)
             PedidoResponseDTO(
                 numeroPedido = pedidoVO.numeroPedido,
                 user = pedidoVO.user,
-                produtos = pedidoVO.produtos.toMutableList()
+                produtos = pedidoVO.produtos.toMutableList(),
+                status = pedidoVO.status
             )
         }
     }
