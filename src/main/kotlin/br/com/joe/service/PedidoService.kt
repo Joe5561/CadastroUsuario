@@ -5,6 +5,7 @@ import br.com.joe.entity.Pedido
 import br.com.joe.entity.dto.PedidoCreateDTO
 import br.com.joe.entity.dto.PedidoResponseDTO
 import br.com.joe.entity.vo.AddressVO
+import br.com.joe.entity.vo.PedidoVO
 import br.com.joe.entity.vo.ProductVO
 import br.com.joe.entity.vo.UserVO
 import br.com.joe.enums.StatusPedido
@@ -40,8 +41,13 @@ class PedidoService {
             val numeroPedido = "PED-${pedidoUtils.gerarNumeroPedidoUnico()}"
 
             val produtos = dto.produtosIDs
-                .mapNotNull { id -> productRepository.findById(id).orElse(null) }
-                .map { produto -> mapper.toProductVO(produto) }
+                .mapNotNull { id ->
+                    productRepository.findById(id).orElse(null)?.let { produto ->
+                        val vo = mapper.toProductVO(produto)
+                        vo.quantidade = dto.quantidadesPorProduto[id] ?: 1
+                        vo
+                    }
+                }
                 .toMutableList()
 
             val enderecoVOs = dto.user.address.map {
@@ -64,26 +70,40 @@ class PedidoService {
                 address = enderecoVOs
             )
 
-            val pedidoVO = mapper.mapToPedidoVO(dto).copy(
+            val quantidadeTotal = produtos.sumOf { it.quantidade }
+            val pedidoVO = PedidoVO(
                 numeroPedido = numeroPedido,
                 user = userVO,
-                produtos = produtos
+                produtos = produtos,
+                status = StatusPedido.RECEBIDO,
+                quantidade = quantidadeTotal
             )
-            val userJson = objectMapper.writeValueAsString(pedidoVO.user)
-            val produtosJson = objectMapper.writeValueAsString(pedidoVO.produtos)
+
+
+            val quantidade = produtos.sumOf { it.quantidade }
+            val valorTotal = pedidoUtils.calcularValorTotal(produtos)
+
+            val userJson = objectMapper.writeValueAsString(userVO)
+            val produtosJson = objectMapper.writeValueAsString(produtos)
 
             val pedidoEntity = Pedido(
                 numeroPedido = numeroPedido,
                 userJson = userJson,
                 produtosJson = produtosJson,
-                status = StatusPedido.RECEBIDO
+                status = StatusPedido.RECEBIDO,
+                quantidade = quantidade,
+                valorTotal = valorTotal
             )
+
             pedidoRepository.save(pedidoEntity)
+
             PedidoResponseDTO(
                 numeroPedido = pedidoVO.numeroPedido,
                 user = pedidoVO.user,
                 produtos = pedidoVO.produtos.toMutableList(),
-                status = pedidoVO.status
+                status = StatusPedido.RECEBIDO,
+                quantidade = quantidade,
+                valorTotal = valorTotal
             )
         }
     }

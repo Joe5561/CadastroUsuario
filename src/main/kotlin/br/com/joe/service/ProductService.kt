@@ -63,7 +63,7 @@ class ProductService {
                 preco = product.preco.toDouble(),
                 quantidadeEstoque = product.quantidadeEstoque,
                 status = product.status.toString(),
-                categoria = categoriaVOList
+                categoria = categoriaVOList.toMutableList()
             )
         }
         return mapper.toProductResponseDTOList(productVOList)

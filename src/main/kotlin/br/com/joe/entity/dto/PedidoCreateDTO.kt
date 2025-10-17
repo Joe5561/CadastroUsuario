@@ -4,5 +4,6 @@ import br.com.joe.entity.vo.UserVO
 
 data class PedidoCreateDTO(
     var user: UserVO,
-    var produtosIDs: List<Long>
+    var produtosIDs: List<Long>,
+    var quantidadesPorProduto: Map<Long, Int> = emptyMap()
 )

@@ -30,6 +30,12 @@ data class Pedido(
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    var status: StatusPedido = StatusPedido.RECEBIDO
+    var status: StatusPedido = StatusPedido.RECEBIDO,
+
+    @Column(nullable = false)
+    var quantidade: Int = 0,
+
+    @Column(nullable = false)
+    var valorTotal: Double = 0.0
 
 )

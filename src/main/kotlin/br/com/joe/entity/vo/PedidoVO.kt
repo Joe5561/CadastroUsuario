@@ -7,5 +7,6 @@ data class PedidoVO(
     var numeroPedido: String = "",
     var user: UserVO = UserVO(),
     var produtos: List<ProductVO> = mutableListOf(),
-    var status: StatusPedido = StatusPedido.RECEBIDO
+    var status: StatusPedido = StatusPedido.RECEBIDO,
+    var quantidade: Int = 0
 )

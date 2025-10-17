@@ -10,6 +10,8 @@ data class PedidoResponseDTO(
     var numeroPedido: String = "",
     var user: UserVO = UserVO(),
     var produtos: MutableList<ProductVO> = mutableListOf(),
-    var status: StatusPedido
+    var status: StatusPedido,
+    var quantidade: Int = 0,
+    var valorTotal: Double = 0.0
 
 ): RepresentationModel<PedidoResponseDTO>()

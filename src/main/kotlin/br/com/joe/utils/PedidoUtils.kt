@@ -1,5 +1,6 @@
 package br.com.joe.utils
 
+import br.com.joe.entity.vo.ProductVO
 import br.com.joe.repository.PedidoRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -15,5 +16,9 @@ class PedidoUtils {
             numero = (100000..999999).random().toString()
         } while (pedidoRepository.existsByNumeroPedido(numero))
         return numero
+    }
+
+    fun calcularValorTotal(produtos: List<ProductVO>): Double {
+        return produtos.sumOf { it.preco * it.quantidade }
     }
 }
