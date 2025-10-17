@@ -27,30 +27,36 @@ class PedidoController {
     @Operation(summary = "Pedidos")
     fun criarPedido(@RequestBody pedidos: List<PedidoCreateDTO>): ResponseEntity<List<PedidoResponseDTO>> {
         val pedido = pedidoService.criarPedidos(pedidos)
+
         pedido.forEach { responseDTO ->
+            responseDTO.add(
+                linkTo(PedidoController::class.java)
+                    .slash(responseDTO.numeroPedido)
+                    .withSelfRel()
+            )
+            responseDTO.user.add(
+                linkTo(UserController::class.java)
+                    .slash(responseDTO.user.id)
+                    .withSelfRel()
+            )
             responseDTO.user.address.forEach { addressResponse ->
                 addressResponse.add(
-                    linkTo(methodOn(AddressController::class.java)
-                        .findById(addressResponse.id)).withSelfRel()
+                    linkTo(AddressController::class.java)
+                        .slash(addressResponse.id)
+                        .withSelfRel()
                 )
             }
-            responseDTO.user.add(
-                linkTo(methodOn(UserController::class.java)
-                    .findByCpf(responseDTO.user.cpf)).withSelfRel()
-            )
-            responseDTO.add(
-                linkTo(methodOn(PedidoController::class.java)
-                    .criarPedido(pedidos)).withSelfRel()
-            )
             responseDTO.produtos.forEach { productResponse ->
                 productResponse.add(
-                    linkTo(methodOn(ProductController::class.java)
-                        .findById(productResponse.id)).withSelfRel()
+                    linkTo(ProductController::class.java)
+                        .slash(productResponse.id)
+                        .withSelfRel()
                 )
                 productResponse.categoria.forEach { categoria ->
                     categoria.add(
-                        linkTo(methodOn(CategoryController::class.java)
-                            .findById(categoria.id)).withSelfRel()
+                        linkTo(CategoryController::class.java)
+                            .slash(categoria.id)
+                            .withSelfRel()
                     )
                 }
             }

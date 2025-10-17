@@ -12,7 +12,6 @@ data class ProductVO(
     var quantidadeEstoque: Int = 0,
     var status: String = "",
     var categoria: MutableList<CategoryVO> = mutableListOf(),
-    var links: List<Link> = listOf(),
     var quantidade: Int = 0
 
 ): RepresentationModel<ProductVO>()
