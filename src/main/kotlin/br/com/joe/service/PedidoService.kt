@@ -37,7 +37,7 @@ class PedidoService {
     @Transactional
     fun criarPedidos(dtos: List<PedidoCreateDTO>): List<PedidoResponseDTO> {
         return dtos.map { dto ->
-            val numeroPedido = "PED-${System.currentTimeMillis()}"
+            val numeroPedido = "PED-${pedidoUtils.gerarNumeroPedidoUnico()}"
 
             val produtos = dto.produtosIDs
                 .mapNotNull { id -> productRepository.findById(id).orElse(null) }
