@@ -91,4 +91,14 @@ class CategoryController {
         val model = EntityModel.of(body, selfLink)
         return ResponseEntity.status(HttpStatus.OK).body(model)
     }
+
+    @GetMapping("/{id}")
+    fun findById(@PathVariable id: Long): ResponseEntity<CategoryVO>{
+        val categoriaVO = categoryService.findById(id)
+        categoriaVO.add(
+            linkTo(methodOn(CategoryController::class.java)
+                .findById(id)).withSelfRel()
+        )
+        return ResponseEntity.status(HttpStatus.OK).body(categoriaVO)
+    }
 }

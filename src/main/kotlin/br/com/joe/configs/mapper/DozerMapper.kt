@@ -11,6 +11,8 @@ import br.com.joe.entity.dto.CategoryDTO
 import br.com.joe.entity.dto.CategoryResponseDTO
 import br.com.joe.entity.dto.VehicleSummaryDTO
 import br.com.joe.entity.dto.CleanVehicleDTO
+import br.com.joe.entity.dto.PedidoCreateDTO
+import br.com.joe.entity.dto.PedidoResponseDTO
 import br.com.joe.entity.dto.ProductCreateDTO
 import br.com.joe.entity.dto.ProductResponseDTO
 import br.com.joe.entity.dto.ProductResponseDTOList
@@ -18,6 +20,7 @@ import br.com.joe.entity.dto.UserCreateDTO
 import br.com.joe.entity.dto.UserResponseDTO
 import br.com.joe.entity.vo.AddressVO
 import br.com.joe.entity.vo.CategoryVO
+import br.com.joe.entity.vo.PedidoVO
 import br.com.joe.entity.vo.ProductVO
 import br.com.joe.entity.vo.UserVO
 import br.com.joe.entity.vo.VehicleVO
@@ -62,7 +65,7 @@ class DozerMapper {
                     bairro = address.bairro,
                     cep = address.cep
                 )
-            }
+            }.toMutableList()
         )
     }
 
@@ -83,7 +86,7 @@ class DozerMapper {
                         bairro = address.bairro,
                         cep = address.cep
                     )
-                }
+                }.toMutableList()
             )
         }
     }
@@ -245,7 +248,7 @@ class DozerMapper {
                     bairro = address.bairro,
                     cep = address.cep
                 )
-            }
+            }.toMutableList()
         )
     }
 
@@ -327,7 +330,7 @@ class DozerMapper {
                 id = it.id,
                 categoria = it.categoria
             )
-        }
+        }.toMutableList()
 
         return ProductVO(
             id = product.id,
@@ -354,4 +357,58 @@ class DozerMapper {
     fun toProductVOList(products: List<Product>): List<ProductVO> {
         return products.map { toProductVO(it) }
     }
+
+    fun toProductVOList(product: Product): ProductVO {
+        val categoriaVO = product.categoria.map {
+            CategoryVO(
+                id = it.id,
+                categoria = it.categoria
+            )
+        }.toMutableList()
+
+        return ProductVO(
+            id = product.id,
+            nome = product.nome,
+            descricao = product.descricao,
+            preco = product.preco.toDouble(),
+            quantidadeEstoque = product.quantidadeEstoque,
+            status = product.status.name,
+            categoria = categoriaVO
+        )
+    }
+
+    fun mapToPedidoVO(dto: PedidoCreateDTO): PedidoVO {
+        // Mapeia manualmente os endereços
+        val enderecoVOs = dto.user.address.map {
+            AddressVO(
+                id = it.id,
+                logradouro = it.logradouro,
+                numero = it.numero,
+                complemento = it.complemento,
+                bairro = it.bairro,
+                cep = it.cep
+            )
+        }.toMutableList()
+
+        // Mapeia manualmente o usuário
+        val userVO = UserVO(
+            id = dto.user.id,
+            name = dto.user.name,
+            cpf = dto.user.cpf,
+            email = dto.user.email,
+            telefone = dto.user.telefone,
+            address = enderecoVOs
+        )
+        // Usa Dozer para mapear o restante do PedidoVO e injeta o usuário manualmente
+        val pedidoVO = mapper.map(dto, PedidoVO::class.java).copy(user = userVO)
+
+        return pedidoVO
+    }
+
+
+    fun mapToPedidoResponseDTO(vo: PedidoVO): PedidoResponseDTO =
+        mapper.map(vo, PedidoResponseDTO::class.java)
+
+    fun mapToPedidoResponseDTOList(vos: List<PedidoVO>): List<PedidoResponseDTO> =
+        vos.map { mapToPedidoResponseDTO(it) }
 }

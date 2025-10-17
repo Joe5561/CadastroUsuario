@@ -76,4 +76,14 @@ class CategoryService {
         }
         categoryRepository.delete(categoria)
     }
+
+    @Transactional
+    fun findById(id: Long): CategoryVO{
+        val categoria = categoryRepository.findById(id)
+            .orElseThrow { CategoryNotFoundException("Category not found") }
+        return CategoryVO(
+            id = categoria.id,
+            categoria = categoria.categoria
+        )
+    }
 }

@@ -10,6 +10,6 @@ data class ProductVO(
     var preco: Double = 0.0,
     var quantidadeEstoque: Int = 0,
     var status: String = "",
-    var categoria: List<CategoryVO> = emptyList()
+    var categoria: MutableList<CategoryVO> = mutableListOf()
 
 ): RepresentationModel<ProductVO>()

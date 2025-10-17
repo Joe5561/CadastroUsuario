@@ -37,4 +37,18 @@ class AddressService {
         }
         return mapper.toAddressVOList(address)
     }
+
+    @Transactional
+    fun findById(id: Long): AddressVO{
+        val address = addressRepository.findById(id)
+            .orElseThrow { AddressNotFoundException("Address not found!!") }
+        return AddressVO(
+            id = address.id,
+            logradouro = address.logradouro,
+            numero = address.numero,
+            complemento = address.complemento,
+            bairro = address.bairro,
+            cep = address.cep
+        )
+    }
 }
