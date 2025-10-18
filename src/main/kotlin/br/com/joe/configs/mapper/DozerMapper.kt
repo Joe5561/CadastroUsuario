@@ -404,7 +404,33 @@ class DozerMapper {
         )
     }
 
+    fun mapProductToVO(product: Product, quantidade: Int): ProductVO{
+        return ProductVO(
+            id = product.id,
+            nome = product.nome,
+            descricao = product.descricao,
+            preco = product.preco.toDouble(),
+            quantidadeEstoque = product.quantidadeEstoque,
+            status = product.status.toString(),
+            categoria = product.categoria.map {
+                CategoryVO(
+                    id = it.id,
+                    categoria = it.categoria
+                )
+            }.toMutableList()
+        )
+    }
 
+    fun mapPedidoToResponse(pedidoVO: PedidoVO, valorTotal: Double): PedidoResponseDTO{
+        return PedidoResponseDTO(
+            numeroPedido = pedidoVO.numeroPedido.toString(),
+            user = pedidoVO.user,
+            produtos = pedidoVO.produtos.toMutableList(),
+            status = pedidoVO.status,
+            quantidade = pedidoVO.quantidade,
+            valorTotal = valorTotal
+        )
+    }
 
     fun mapToPedidoResponseDTO(vo: PedidoVO): PedidoResponseDTO =
         mapper.map(vo, PedidoResponseDTO::class.java)

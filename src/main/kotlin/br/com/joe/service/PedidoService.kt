@@ -4,11 +4,7 @@ import br.com.joe.configs.mapper.DozerMapper
 import br.com.joe.entity.Pedido
 import br.com.joe.entity.dto.PedidoCreateDTO
 import br.com.joe.entity.dto.PedidoResponseDTO
-import br.com.joe.entity.vo.AddressVO
-import br.com.joe.entity.vo.CategoryVO
 import br.com.joe.entity.vo.PedidoVO
-import br.com.joe.entity.vo.ProductVO
-import br.com.joe.entity.vo.UserVO
 import br.com.joe.enums.StatusPedido
 import br.com.joe.exception.CpfCnpjInvalidException
 import br.com.joe.exception.ProductNotFoundException
@@ -63,41 +59,12 @@ class PedidoService {
 
             val produtos = dto.produtosIDs.mapNotNull { id ->
                 productRepository.findById(id).orElse(null)?.let { produto ->
-                    ProductVO(
-                        id = produto.id,
-                        nome = produto.nome,
-                        descricao = produto.descricao,
-                        preco = produto.preco.toDouble(),
-                        quantidadeEstoque = produto.quantidadeEstoque,
-                        status = produto.status.name,
-                        categoria = produto.categoria.map { categoria ->
-                            CategoryVO(
-                                id = categoria.id,
-                                categoria = categoria.categoria
-                            )
-                        }.toMutableList(),
+                    mapper.toProductVO(produto).apply {
                         quantidade = dto.quantidadesPorProduto[id] ?: 1
-                    )
+                    }
                 }
             }.toMutableList()
-
-            val userVO = UserVO(
-                id = usuario.id,
-                name = usuario.name,
-                cpf = usuario.cpf,
-                email = usuario.email,
-                telefone = usuario.telefone,
-                address = usuario.address.map {
-                    AddressVO(
-                        id = it.id,
-                        logradouro = it.logradouro,
-                        numero = it.numero,
-                        complemento = it.complemento,
-                        bairro = it.bairro,
-                        cep = it.cep
-                    )
-                }.toMutableList()
-            )
+            val userVO = mapper.toUserVO(usuario)
             val numeroPedido = "PED-${pedidoUtils.gerarNumeroPedidoUnico()}"
             val valorTotal = pedidoUtils.calcularValorTotal(produtos)
             val quantidade = produtos.sumOf { it.quantidade }
@@ -109,7 +76,6 @@ class PedidoService {
                 status = StatusPedido.RECEBIDO,
                 quantidade = quantidade
             )
-
             val pedido = Pedido(
                 numeroPedido = numeroPedido,
                 userJson = objectMapper.writeValueAsString(userVO),
@@ -119,14 +85,7 @@ class PedidoService {
                 valorTotal = valorTotal
             )
             pedidoRepository.save(pedido)
-            PedidoResponseDTO(
-                numeroPedido = pedidoVO.numeroPedido,
-                user = pedidoVO.user,
-                produtos = pedidoVO.produtos.toMutableList(),
-                status = pedidoVO.status,
-                quantidade = pedidoVO.quantidade,
-                valorTotal = valorTotal
-            )
+            mapper.mapPedidoToResponse(pedidoVO, valorTotal)
         }
     }
 }
