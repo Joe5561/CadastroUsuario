@@ -25,6 +25,7 @@ import br.com.joe.entity.vo.ProductVO
 import br.com.joe.entity.vo.UserVO
 import br.com.joe.entity.vo.VehicleVO
 import br.com.joe.enums.ProductStatus
+import br.com.joe.enums.StatusPedido
 import com.github.dozermapper.core.Mapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -377,9 +378,8 @@ class DozerMapper {
         )
     }
 
-    fun mapToPedidoVO(dto: PedidoCreateDTO): PedidoVO {
-        // Mapeia manualmente os endereços
-        val enderecoVOs = dto.user.address.map {
+    fun mapToPedidoVO(usuarioEntity: User, produtos: List<ProductVO>): PedidoVO {
+        val enderecosVO = usuarioEntity.address.map {
             AddressVO(
                 id = it.id,
                 logradouro = it.logradouro,
@@ -390,20 +390,20 @@ class DozerMapper {
             )
         }.toMutableList()
 
-        // Mapeia manualmente o usuário
-        val userVO = UserVO(
-            id = dto.user.id,
-            name = dto.user.name,
-            cpf = dto.user.cpf,
-            email = dto.user.email,
-            telefone = dto.user.telefone,
-            address = enderecoVOs
-        )
-        // Usa Dozer para mapear o restante do PedidoVO e injeta o usuário manualmente
-        val pedidoVO = mapper.map(dto, PedidoVO::class.java).copy(user = userVO)
 
-        return pedidoVO
+        val userVO = toUserVO(usuarioEntity).apply {
+            address = enderecosVO
+        }
+
+        return PedidoVO(
+            numeroPedido = "",
+            user = userVO,
+            produtos = produtos.toMutableList(),
+            status = StatusPedido.RECEBIDO,
+            quantidade = 0
+        )
     }
+
 
 
     fun mapToPedidoResponseDTO(vo: PedidoVO): PedidoResponseDTO =
