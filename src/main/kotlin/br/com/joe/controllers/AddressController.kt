@@ -2,7 +2,7 @@ package br.com.joe.controllers
 
 import br.com.joe.entity.vo.AddressVO
 import br.com.joe.service.AddressService
-import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Hidden
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -16,14 +16,13 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/address")
-@Tag(name = "Address", description = "Operações relacionadas a endereços")
 class AddressController {
 
     @Autowired
     private lateinit var addressService: AddressService
 
+    @Hidden
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar endereço")
     fun findById(@PathVariable id: Long): ResponseEntity<AddressVO>{
         val addressVO = addressService.findById(id)
         addressVO.add(
