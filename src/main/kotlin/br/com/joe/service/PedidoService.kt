@@ -7,6 +7,7 @@ import br.com.joe.entity.dto.PedidoResponseDTO
 import br.com.joe.entity.vo.PedidoVO
 import br.com.joe.enums.StatusPedido
 import br.com.joe.exception.CpfCnpjInvalidException
+import br.com.joe.exception.ProductNotAvailableException
 import br.com.joe.exception.ProductNotFoundException
 import br.com.joe.exception.UserNotFoundException
 import br.com.joe.repository.PedidoRepository
@@ -56,14 +57,20 @@ class PedidoService {
             if (produtosNaoEncontrados.isNotEmpty()){
                 throw ProductNotFoundException("Product not found!!")
             }
-
             val produtos = dto.produtosIDs.mapNotNull { id ->
-                productRepository.findById(id).orElse(null)?.let { produto ->
+                productRepository.findById(id).orElse(null)?.takeIf { produto ->
+                    produto.status.name == "ATIVO"
+                }?.let { produto ->
                     mapper.toProductVO(produto).apply {
                         quantidade = dto.quantidadesPorProduto[id] ?: 1
                     }
                 }
             }.toMutableList()
+
+            if (produtos.size != dto.produtosIDs.size){
+                throw ProductNotAvailableException("Product not available")
+            }
+
             val userVO = mapper.toUserVO(usuario)
             val numeroPedido = "PED-${pedidoUtils.gerarNumeroPedidoUnico()}"
             val valorTotal = pedidoUtils.calcularValorTotal(produtos)
