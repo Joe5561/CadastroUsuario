@@ -432,6 +432,23 @@ class DozerMapper {
         )
     }
 
+    fun mapPedidosToResponse(pedidosVO: List<PedidoVO>, valoresTotais: List<Double>): List<PedidoResponseDTO> {
+        if (pedidosVO.size != valoresTotais.size) {
+            throw IllegalArgumentException("A quantidade de pedidos e valores totais não corresponde.")
+        }
+
+        return pedidosVO.mapIndexed { index, pedidoVO ->
+            PedidoResponseDTO(
+                numeroPedido = pedidoVO.numeroPedido.toString(),
+                user = pedidoVO.user,
+                produtos = pedidoVO.produtos.toMutableList(),
+                status = pedidoVO.status,
+                quantidade = pedidoVO.quantidade,
+                valorTotal = valoresTotais[index]
+            )
+        }
+    }
+
     fun mapToPedidoResponseDTO(vo: PedidoVO): PedidoResponseDTO =
         mapper.map(vo, PedidoResponseDTO::class.java)
 

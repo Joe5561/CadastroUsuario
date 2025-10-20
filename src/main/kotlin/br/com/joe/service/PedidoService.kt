@@ -5,8 +5,11 @@ import br.com.joe.entity.Pedido
 import br.com.joe.entity.dto.PedidoCreateDTO
 import br.com.joe.entity.dto.PedidoResponseDTO
 import br.com.joe.entity.vo.PedidoVO
+import br.com.joe.entity.vo.ProductVO
+import br.com.joe.entity.vo.UserVO
 import br.com.joe.enums.StatusPedido
 import br.com.joe.exception.CpfCnpjInvalidException
+import br.com.joe.exception.PedidoNotFoundException
 import br.com.joe.exception.ProductNotAvailableException
 import br.com.joe.exception.ProductNotFoundException
 import br.com.joe.exception.UserNotFoundException
@@ -95,4 +98,39 @@ class PedidoService {
             mapper.mapPedidoToResponse(pedidoVO, valorTotal)
         }
     }
+
+    @Transactional
+    fun consultarPedidos(cpfOuNumeroPedido: String): List<PedidoResponseDTO> {
+        val validator = CpfCnpjValidator()
+        val isCpf = validator.isValidCpf(cpfOuNumeroPedido)
+        val isCnpj = validator.isValidCnpj(cpfOuNumeroPedido)
+
+        val pedidos: List<Pedido> = when {
+            isCpf || isCnpj -> {
+                pedidoRepository.findAllByCpf(cpfOuNumeroPedido)
+            }
+            cpfOuNumeroPedido.startsWith("PED-") -> {
+                val pedido = pedidoRepository.findByNumeroPedido(cpfOuNumeroPedido)
+                    ?: throw PedidoNotFoundException("Pedido não encontrado $cpfOuNumeroPedido")
+                listOf(pedido)
+            }
+            else -> throw CpfCnpjInvalidException("Entrada inválida: informe um CPF/CNPJ válido ou número de pedido no formato 'PED-XXXX'")
+        }
+        return pedidos.map { pedido ->
+            val userVO = objectMapper.readValue(pedido.userJson, UserVO::class.java)
+            val produtosVO = objectMapper.readValue(
+                pedido.produtosJson,
+                object : com.fasterxml.jackson.core.type.TypeReference<List<ProductVO>>() {}
+            )
+            val pedidoVO = PedidoVO(
+                numeroPedido = pedido.numeroPedido,
+                user = userVO,
+                produtos = produtosVO.toMutableList(),
+                status = pedido.status,
+                quantidade = pedido.quantidade
+            )
+            mapper.mapPedidoToResponse(pedidoVO, pedido.valorTotal)
+        }
+    }
+
 }

@@ -9,6 +9,7 @@ import br.com.joe.exception.ExceptionResponse
 import br.com.joe.exception.ExistingBoardException
 import br.com.joe.exception.ExistingCategoryException
 import br.com.joe.exception.ExistingNumberException
+import br.com.joe.exception.PedidoNotFoundException
 import br.com.joe.exception.PhoneInvalidException
 import br.com.joe.exception.ProductAlreadyExistsException
 import br.com.joe.exception.ProductNotAvailableException
@@ -19,10 +20,8 @@ import br.com.joe.exception.UserNotFoundException
 import br.com.joe.exception.VehicleAlreadyAssignedException
 import br.com.joe.exception.VehicleAlreadyUnlinkedException
 import br.com.joe.exception.VehicleNotFoundException
-import jakarta.validation.ConstraintViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -253,6 +252,18 @@ class CustomizedResponseEntityExceptionHandler: ResponseEntityExceptionHandler()
     @ExceptionHandler(ProductNotAvailableException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handleProductNotAvailableException(ex: Exception, request: WebRequest):
+            ResponseEntity<ExceptionResponse> {
+        val exceptionResponse = ExceptionResponse(
+            Date(),
+            ex.message,
+            request.getDescription(false)
+        )
+        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(PedidoNotFoundException::class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun handlePedidoNouFoundException(ex: Exception, request: WebRequest):
             ResponseEntity<ExceptionResponse> {
         val exceptionResponse = ExceptionResponse(
             Date(),

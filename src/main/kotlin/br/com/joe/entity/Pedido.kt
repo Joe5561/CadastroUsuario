@@ -19,7 +19,7 @@ data class Pedido(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "numero_pedido", unique = true, nullable = false)
     var numeroPedido: String = "",
 
     @Lob
