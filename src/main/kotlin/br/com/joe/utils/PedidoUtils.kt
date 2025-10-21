@@ -24,7 +24,9 @@ class PedidoUtils {
             .filter { it.quantidadeEstoque < it.quantidade }
             .map { it.nome }
         if (produtosComErro.isNotEmpty()) {
-            throw InsufficientStockException("Estoque insuficiente para os produtos: ${produtosComErro.joinToString(", ")}")
+            throw InsufficientStockException(
+                "Estoque insuficiente para os produtos:" +
+                        " ${produtosComErro.joinToString(", ")}")
         }
         produtos.forEach { it.quantidadeEstoque -= it.quantidade }
         return produtos.sumOf { it.preco * it.quantidade }
