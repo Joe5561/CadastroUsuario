@@ -9,6 +9,7 @@ import br.com.joe.entity.vo.ProductVO
 import br.com.joe.entity.vo.UserVO
 import br.com.joe.enums.StatusPedido
 import br.com.joe.exception.CpfCnpjInvalidException
+import br.com.joe.exception.InsufficientStockException
 import br.com.joe.exception.PedidoNotFoundException
 import br.com.joe.exception.ProductNotAvailableException
 import br.com.joe.exception.ProductNotFoundException
@@ -79,6 +80,20 @@ class PedidoService {
             val valorTotal = pedidoUtils.calcularValorTotal(produtos)
             val quantidade = produtos.sumOf { it.quantidade }
 
+            val produtosComEstoqueInsuficiente = mutableListOf<String>()
+            produtos.forEach { productVO ->
+                val produtosEntity = productRepository.findById(productVO.id)
+                    .orElseThrow { ProductNotFoundException("Produto não encontrado ${productVO.id}") }
+                if (produtosEntity.quantidadeEstoque < productVO.quantidade){
+                    produtosComEstoqueInsuficiente.add(produtosEntity.nome)
+                }else{
+                    produtosEntity.quantidadeEstoque -= productVO.quantidade
+                    productRepository.save(produtosEntity)
+                }
+            }
+            if (produtosComEstoqueInsuficiente.isNotEmpty()){
+                throw InsufficientStockException(produtosComEstoqueInsuficiente)
+            }
             val pedidoVO = PedidoVO(
                 numeroPedido = numeroPedido,
                 user = userVO,
@@ -132,5 +147,4 @@ class PedidoService {
             mapper.mapPedidoToResponse(pedidoVO, pedido.valorTotal)
         }
     }
-
 }

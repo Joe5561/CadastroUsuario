@@ -1,6 +1,7 @@
 package br.com.joe.utils
 
 import br.com.joe.entity.vo.ProductVO
+import br.com.joe.exception.InsufficientStockException
 import br.com.joe.repository.PedidoRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -19,6 +20,13 @@ class PedidoUtils {
     }
 
     fun calcularValorTotal(produtos: List<ProductVO>): Double {
+        val produtosComErro = produtos
+            .filter { it.quantidadeEstoque < it.quantidade }
+            .map { it.nome }
+        if (produtosComErro.isNotEmpty()) {
+            throw InsufficientStockException("Estoque insuficiente para os produtos: ${produtosComErro.joinToString(", ")}")
+        }
+        produtos.forEach { it.quantidadeEstoque -= it.quantidade }
         return produtos.sumOf { it.preco * it.quantidade }
     }
 }

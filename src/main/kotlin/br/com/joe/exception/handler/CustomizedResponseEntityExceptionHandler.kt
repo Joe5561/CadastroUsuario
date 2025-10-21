@@ -9,6 +9,7 @@ import br.com.joe.exception.ExceptionResponse
 import br.com.joe.exception.ExistingBoardException
 import br.com.joe.exception.ExistingCategoryException
 import br.com.joe.exception.ExistingNumberException
+import br.com.joe.exception.InsufficientStockException
 import br.com.joe.exception.PedidoNotFoundException
 import br.com.joe.exception.PhoneInvalidException
 import br.com.joe.exception.ProductAlreadyExistsException
@@ -271,5 +272,17 @@ class CustomizedResponseEntityExceptionHandler: ResponseEntityExceptionHandler()
             request.getDescription(false)
         )
         return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(InsufficientStockException::class)
+    @ResponseStatus(HttpStatus.INSUFFICIENT_STORAGE)
+    fun handleInsufficientStockException(ex: Exception, request: WebRequest):
+            ResponseEntity<ExceptionResponse> {
+        val exceptionResponse = ExceptionResponse(
+            Date(),
+            ex.message,
+            request.getDescription(false)
+        )
+        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.INSUFFICIENT_STORAGE)
     }
 }
