@@ -7,6 +7,7 @@ import br.com.joe.entity.dto.PedidoResponseDTO
 import br.com.joe.entity.vo.PedidoVO
 import br.com.joe.entity.vo.ProductVO
 import br.com.joe.entity.vo.UserVO
+import br.com.joe.enums.ProductStatus
 import br.com.joe.enums.StatusPedido
 import br.com.joe.exception.CpfCnpjInvalidException
 import br.com.joe.exception.InsufficientStockException
@@ -72,7 +73,7 @@ class PedidoService {
             }.toMutableList()
 
             if (produtos.size != dto.produtosIDs.size){
-                throw ProductNotAvailableException("Product not available")
+                throw ProductNotAvailableException("Produto não disponível")
             }
 
             val userVO = mapper.toUserVO(usuario)
@@ -88,6 +89,9 @@ class PedidoService {
                     produtosComEstoqueInsuficiente.add(produtosEntity.nome)
                 }else{
                     produtosEntity.quantidadeEstoque -= productVO.quantidade
+                    if (produtosEntity.quantidadeEstoque == 0){
+                        produtosEntity.status = ProductStatus.ESGOTADO
+                    }
                     productRepository.save(produtosEntity)
                 }
             }
