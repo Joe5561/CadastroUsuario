@@ -38,7 +38,9 @@ class PedidoUtils {
         return produtos.sumOf { it.preco * it.quantidade }
     }
 
-    fun desserializarPedidoJson(userJson: String, produtosJson: String, numeroPedido: String): Pair<UserVO, MutableList<ProductVO>> {
+    fun desserializarPedidoJson(userJson: String,
+                                produtosJson: String,
+                                numeroPedido: String): Pair<UserVO, MutableList<ProductVO>> {
         if (userJson.isBlank()) {
             throw IllegalStateException("Campo userJson está vazio no pedido $numeroPedido")
         }

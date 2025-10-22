@@ -463,7 +463,8 @@ class DozerMapper {
         if (pedido.userJson.isBlank() || pedido.produtosJson.isBlank()) {
             throw IllegalStateException("JSON do pedido está vazio ou inválido")
         }
-        val (userVO, produtosVO) = pedidoUtils.desserializarPedidoJson(pedido.userJson, pedido.produtosJson, pedido.numeroPedido)
+        val (userVO, produtosVO) = pedidoUtils.desserializarPedidoJson(
+            pedido.userJson, pedido.produtosJson, pedido.numeroPedido)
 
         return PedidoVO(
             numeroPedido = pedido.numeroPedido,
