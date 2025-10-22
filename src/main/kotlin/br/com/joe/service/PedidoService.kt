@@ -72,10 +72,16 @@ class PedidoService {
                 }
             }.toMutableList()
 
-            if (produtos.size != dto.produtosIDs.size){
-                throw ProductNotAvailableException("Produto não disponível")
+            val produtosIndisponiveis = dto.produtosIDs.filterNot { id ->
+                produtos.any { it.id == id }
             }
-
+            if (produtosIndisponiveis.isNotEmpty()){
+                val nomesIndisponiveis = produtosIndisponiveis.mapNotNull { id ->
+                    productRepository.findById(id).orElse(null)?.nome
+                }
+                throw ProductNotAvailableException(
+                    "Produtos indisponíveis: ${nomesIndisponiveis.joinToString(", ")}")
+            }
             val userVO = mapper.toUserVO(usuario)
             val numeroPedido = "PED-${pedidoUtils.gerarNumeroPedidoUnico()}"
             val valorTotal = pedidoUtils.calcularValorTotal(produtos)
