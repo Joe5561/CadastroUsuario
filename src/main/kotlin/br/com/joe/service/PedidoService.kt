@@ -157,4 +157,23 @@ class PedidoService {
             mapper.mapPedidoToResponse(pedidoVO, pedido.valorTotal)
         }
     }
+
+    fun alterarStatusPedido(identificador: String, novoStatus: StatusPedido): PedidoResponseDTO {
+        val pedido = if (identificador.startsWith("PED-")) {
+            pedidoRepository.findByNumeroPedido(identificador)
+                ?: throw PedidoNotFoundException("Pedido com número $identificador não encontrado")
+        } else {
+            val usuario = userRepository.findByCpf(identificador)
+                ?: throw UserNotFoundException("Usuário com CPF/CNPJ $identificador não encontrado")
+
+            pedidoRepository.findTopByCpfInJson(usuario.cpf)
+                ?: throw PedidoNotFoundException("Nenhum pedido encontrado para o CPF/CNPJ $identificador")
+        }
+        pedido.status = novoStatus
+        pedidoRepository.save(pedido)
+        val pedidoVO = mapper.toPedidoVO(pedido)
+        val valorTotal = pedido.valorTotal
+
+        return mapper.mapPedidoToResponse(pedidoVO, valorTotal)
+    }
 }

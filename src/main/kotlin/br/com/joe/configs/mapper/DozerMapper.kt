@@ -1,7 +1,9 @@
 package br.com.joe.configs.mapper
 
+import aj.org.objectweb.asm.TypeReference
 import br.com.joe.entity.Address
 import br.com.joe.entity.Category
+import br.com.joe.entity.Pedido
 import br.com.joe.entity.Product
 import br.com.joe.entity.User
 import br.com.joe.entity.Vehicle
@@ -26,6 +28,8 @@ import br.com.joe.entity.vo.UserVO
 import br.com.joe.entity.vo.VehicleVO
 import br.com.joe.enums.ProductStatus
 import br.com.joe.enums.StatusPedido
+import br.com.joe.utils.PedidoUtils
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.dozermapper.core.Mapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -37,6 +41,12 @@ class DozerMapper {
     @Autowired
     @Qualifier("dozerCoreMapper")
     lateinit var mapper: Mapper
+
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
+
+    @Autowired
+    private lateinit var pedidoUtils: PedidoUtils
 
     fun <O, D> mapObject(origin: O, destination: Class<D>): D{
         return mapper.map(origin, destination)
@@ -447,6 +457,21 @@ class DozerMapper {
                 valorTotal = valoresTotais[index]
             )
         }
+    }
+
+    fun toPedidoVO(pedido: Pedido): PedidoVO {
+        if (pedido.userJson.isBlank() || pedido.produtosJson.isBlank()) {
+            throw IllegalStateException("JSON do pedido está vazio ou inválido")
+        }
+        val (userVO, produtosVO) = pedidoUtils.desserializarPedidoJson(pedido.userJson, pedido.produtosJson, pedido.numeroPedido)
+
+        return PedidoVO(
+            numeroPedido = pedido.numeroPedido,
+            user = userVO,
+            produtos = produtosVO,
+            status = pedido.status,
+            quantidade = pedido.quantidade
+        )
     }
 
     fun mapToPedidoResponseDTO(vo: PedidoVO): PedidoResponseDTO =

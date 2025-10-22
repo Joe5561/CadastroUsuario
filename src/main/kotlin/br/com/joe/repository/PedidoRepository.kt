@@ -3,6 +3,7 @@ package br.com.joe.repository
 import br.com.joe.entity.Pedido
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -18,4 +19,15 @@ interface PedidoRepository: JpaRepository<Pedido, Long> {
     )
     fun findAllByCpf(cpf: String): List<Pedido>
     fun findByNumeroPedido(numeroPedido: String): Pedido?
+
+    @Query(
+        value = """
+        SELECT * FROM pedido 
+        WHERE user_json LIKE %:cpf% 
+        ORDER BY id DESC 
+        LIMIT 1
+    """,
+        nativeQuery = true
+    )
+    fun findTopByCpfInJson(@Param("cpf") cpf: String): Pedido?
 }

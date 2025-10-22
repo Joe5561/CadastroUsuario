@@ -1,5 +1,6 @@
 package br.com.joe.controllers
 
+import br.com.joe.entity.dto.AlterarStatusPedidoDTO
 import br.com.joe.entity.dto.ConsultaPedidoRequestDTO
 import br.com.joe.entity.dto.PedidoCreateDTO
 import br.com.joe.entity.dto.PedidoResponseDTO
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
+import org.springframework.web.bind.annotation.PutMapping
 
 @RestController
 @RequestMapping("/pedidos")
@@ -106,5 +108,12 @@ class PedidoController {
             }
         }
         return ResponseEntity.status(HttpStatus.OK).body(pedidos)
+    }
+
+    @PutMapping("/status")
+    @Operation(summary = "Atualizar status do pedido")
+    fun alterarStatusPedido(@RequestBody dto: AlterarStatusPedidoDTO): ResponseEntity<PedidoResponseDTO>{
+        val pedidoAtualizado = pedidoService.alterarStatusPedido(dto.identificador, dto.novoStatus)
+        return ResponseEntity.ok(pedidoAtualizado)
     }
 }
