@@ -475,6 +475,10 @@ class DozerMapper {
         )
     }
 
+    fun mapAddressVOToAddress(addressVO: AddressVO): Address{
+        return mapper.map(addressVO, Address::class.java)
+    }
+
     fun mapToPedidoResponseDTO(vo: PedidoVO): PedidoResponseDTO =
         mapper.map(vo, PedidoResponseDTO::class.java)
 

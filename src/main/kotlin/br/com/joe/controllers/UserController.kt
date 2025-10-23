@@ -1,5 +1,6 @@
 package br.com.joe.controllers
 
+import br.com.joe.entity.dto.AddressDTO
 import br.com.joe.entity.dto.UserCreateDTO
 import br.com.joe.entity.dto.UserResponseDTO
 import br.com.joe.entity.vo.UserVO
@@ -113,5 +114,11 @@ class UserController {
                 .deleteByCpf(deleteUserDTO.cpf)).withSelfRel()
         )
         return ResponseEntity.status(HttpStatus.OK).body(deleteUserDTO)
+    }
+
+    @PutMapping("/novoEndereco")
+    fun atualizarEndereco(@RequestBody dto: AddressDTO): ResponseEntity<UserResponseDTO>{
+        val novoEndereco = service.atualizarEndereco(dto.cpfOuCnpj, dto.novoEndereco)
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(novoEndereco)
     }
 }

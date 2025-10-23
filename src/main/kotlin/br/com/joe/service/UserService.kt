@@ -1,8 +1,10 @@
 package br.com.joe.service
 
 import br.com.joe.configs.mapper.DozerMapper
+import br.com.joe.entity.Address
 import br.com.joe.entity.dto.UserCreateDTO
 import br.com.joe.entity.dto.UserResponseDTO
+import br.com.joe.entity.vo.AddressVO
 import br.com.joe.entity.vo.UserVO
 import br.com.joe.exception.CpfCnpjInvalidException
 import br.com.joe.exception.EmailInvalidException
@@ -121,6 +123,19 @@ class UserService {
         user.name = novoNome
         val userUpdate = repository.save(user)
         val userVO = mapper.toUserVO(userUpdate)
+        return mapper.toUserResponseDTO(userVO)
+    }
+
+    @Transactional
+    fun atualizarEndereco(cpf: String, novoEndreco: AddressVO): UserResponseDTO{
+        val user = repository.findByCpf(cpf)
+            ?:throw UserNotFoundException("Usuário não encontrado $cpf")
+        val enderecoConvertido = mapper.mapAddressVOToAddress(novoEndreco)
+
+        user.address.clear()
+        user.address.add(enderecoConvertido)
+        val userAtualizado = repository.save(user)
+        val userVO = mapper.toUserVO(userAtualizado)
         return mapper.toUserResponseDTO(userVO)
     }
 }
