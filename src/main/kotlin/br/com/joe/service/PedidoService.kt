@@ -20,6 +20,7 @@ import br.com.joe.repository.ProductRepository
 import br.com.joe.repository.UserRepository
 import br.com.joe.utils.PedidoUtils
 import br.com.joe.utils.validator.CpfCnpjValidator
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -145,7 +146,7 @@ class PedidoService {
             val userVO = objectMapper.readValue(pedido.userJson, UserVO::class.java)
             val produtosVO = objectMapper.readValue(
                 pedido.produtosJson,
-                object : com.fasterxml.jackson.core.type.TypeReference<List<ProductVO>>() {}
+                object : TypeReference<List<ProductVO>>() {}
             )
             val pedidoVO = PedidoVO(
                 numeroPedido = pedido.numeroPedido,
