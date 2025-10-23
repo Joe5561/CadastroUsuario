@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
@@ -117,8 +118,13 @@ class UserController {
     }
 
     @PutMapping("/novoEndereco")
-    fun atualizarEndereco(@RequestBody dto: AddressDTO): ResponseEntity<UserResponseDTO>{
+    @Operation(summary = "Atualizar endereço")
+    fun atualizarEndereco(@RequestBody dto: AddressDTO): ResponseEntity<EntityModel<UserResponseDTO>>{
         val novoEndereco = service.atualizarEndereco(dto.cpfOuCnpj, dto.novoEndereco)
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(novoEndereco)
+        val selfLink = linkTo(UserController::class.java)
+            .slash("novo-endereço")
+            .withSelfRel()
+        val model = EntityModel.of(novoEndereco, selfLink)
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(model)
     }
 }
