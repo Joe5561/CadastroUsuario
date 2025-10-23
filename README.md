@@ -1,5 +1,5 @@
 🛍️ API de Loja Virtual
-Esta API foi desenvolvida para gerenciar produtos, categorias e os seus relacionamentos numa loja virtual. Ela permite o cadastro de itens, organização por categorias e navegação entre recursos via HATEOAS, garantindo uma gestão eficiente e segura dos dados.
+Esta API foi desenvolvida para gerenciar produtos, categorias e usuários em uma loja virtual. Ela oferece funcionalidades completas para cadastro, associação e navegação entre recursos, com suporte a HATEOAS e mapeamento inteligente via Dozer.
 
 ## 📌 Funcionalidades
 
@@ -22,14 +22,14 @@ Esta API foi desenvolvida para gerenciar produtos, categorias e os seus relacion
 
 ## 🛠️ Tecnologias utilizadas
 
-- Kotlin
-- Spring Boot 3.5.3
-- Maven
-- Spring Data JPA
-- MySQL
-- Springdoc OpenAPI
-- HATEOAS
-- Dozer Mapper
+- Kotlin — linguagem moderna e concisa para desenvolvimento backend
+- Spring Boot 3.5.3 — estrutura robusta para criação de APIs REST
+- Spring Data JPA — abstração para persistência e consultas no banco
+- MySQL — banco de dados relacional para armazenar entidades
+- Dozer Mapper — mapeamento automático entre entidades e DTOs
+- Springdoc OpenAPI — documentação automática dos endpoints
+- HATEOAS — inclusão de links navegáveis nas respostas REST
+- Maven — gerenciamento de dependências e empacotamento do projeto
 
 ## 📦 Empacotamento
 
