@@ -6,7 +6,6 @@ import br.com.joe.exception.CategoryNotFoundException
 import br.com.joe.exception.CpfCnpjInvalidException
 import br.com.joe.exception.EmailInvalidException
 import br.com.joe.exception.ExceptionResponse
-import br.com.joe.exception.ExistingBoardException
 import br.com.joe.exception.ExistingCategoryException
 import br.com.joe.exception.ExistingNumberException
 import br.com.joe.exception.InsufficientStockException
@@ -18,9 +17,6 @@ import br.com.joe.exception.ProductNotFoundException
 import br.com.joe.exception.ResourceNotFoundException
 import br.com.joe.exception.UserConflictException
 import br.com.joe.exception.UserNotFoundException
-import br.com.joe.exception.VehicleAlreadyAssignedException
-import br.com.joe.exception.VehicleAlreadyUnlinkedException
-import br.com.joe.exception.VehicleNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -57,45 +53,9 @@ class CustomizedResponseEntityExceptionHandler: ResponseEntityExceptionHandler()
         return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.NOT_FOUND)
     }
 
-    @ExceptionHandler(VehicleNotFoundException::class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    fun handleVehicleNotFoundException(ex: Exception, request: WebRequest):
-            ResponseEntity<ExceptionResponse> {
-        val exceptionResponse = ExceptionResponse(
-            Date(),
-            ex.message,
-            request.getDescription(false)
-        )
-        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.NOT_FOUND)
-    }
-
-    @ExceptionHandler(ExistingBoardException::class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    fun handleExistingBoardException(ex: Exception, request: WebRequest):
-            ResponseEntity<ExceptionResponse> {
-        val exceptionResponse = ExceptionResponse(
-            Date(),
-            ex.message,
-            request.getDescription(false)
-        )
-        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.CONFLICT)
-    }
-
     @ExceptionHandler(UserConflictException::class)
     @ResponseStatus(HttpStatus.CONFLICT)
     fun handleUserConflictException(ex: Exception, request: WebRequest):
-            ResponseEntity<ExceptionResponse> {
-        val exceptionResponse = ExceptionResponse(
-            Date(),
-            ex.message,
-            request.getDescription(false)
-        )
-        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.CONFLICT)
-    }
-
-    @ExceptionHandler(VehicleAlreadyAssignedException::class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    fun handleVehicleAlreadyAssignedException(ex: Exception, request: WebRequest):
             ResponseEntity<ExceptionResponse> {
         val exceptionResponse = ExceptionResponse(
             Date(),
@@ -127,19 +87,6 @@ class CustomizedResponseEntityExceptionHandler: ResponseEntityExceptionHandler()
             request.getDescription(false)
         )
         return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.BAD_REQUEST)
-    }
-
-
-    @ExceptionHandler(VehicleAlreadyUnlinkedException::class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    fun handleVehicleAlreadyUnlinkedException(ex: Exception, request: WebRequest):
-            ResponseEntity<ExceptionResponse> {
-        val exceptionResponse = ExceptionResponse(
-            Date(),
-            ex.message,
-            request.getDescription(false)
-        )
-        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.CONFLICT)
     }
 
     @ExceptionHandler(EmailInvalidException::class)
