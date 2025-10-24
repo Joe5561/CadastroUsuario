@@ -24,9 +24,6 @@ data class User(
 
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name = "user_id")
-    var address: MutableList<Address> = mutableListOf(),
-
-    @OneToMany(mappedBy = "user", cascade = [], orphanRemoval = false)
-    var vehicles: MutableList<Vehicle> = mutableListOf()
+    var address: MutableList<Address> = mutableListOf()
 
 )

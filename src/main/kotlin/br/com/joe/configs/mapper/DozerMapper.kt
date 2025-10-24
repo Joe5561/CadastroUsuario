@@ -6,13 +6,10 @@ import br.com.joe.entity.Category
 import br.com.joe.entity.Pedido
 import br.com.joe.entity.Product
 import br.com.joe.entity.User
-import br.com.joe.entity.Vehicle
 import br.com.joe.entity.dto.AddressCreateDTO
 import br.com.joe.entity.dto.AddressResponseDTO
 import br.com.joe.entity.dto.CategoryDTO
 import br.com.joe.entity.dto.CategoryResponseDTO
-import br.com.joe.entity.dto.VehicleSummaryDTO
-import br.com.joe.entity.dto.CleanVehicleDTO
 import br.com.joe.entity.dto.PedidoCreateDTO
 import br.com.joe.entity.dto.PedidoResponseDTO
 import br.com.joe.entity.dto.ProductCreateDTO
@@ -25,7 +22,6 @@ import br.com.joe.entity.vo.CategoryVO
 import br.com.joe.entity.vo.PedidoVO
 import br.com.joe.entity.vo.ProductVO
 import br.com.joe.entity.vo.UserVO
-import br.com.joe.entity.vo.VehicleVO
 import br.com.joe.enums.ProductStatus
 import br.com.joe.enums.StatusPedido
 import br.com.joe.utils.PedidoUtils
@@ -104,46 +100,6 @@ class DozerMapper {
 
     fun toUserList(userVOs: List<UserVO>): List<User> {
         return userVOs.map { mapper.map(it, User::class.java) }
-    }
-
-    fun toVehicle(vehicleVO: VehicleVO): Vehicle{
-        return mapper.map(vehicleVO, Vehicle::class.java)
-    }
-
-    fun toVehicleVO(vehicle: Vehicle): VehicleVO{
-        return mapper.map(vehicle, VehicleVO::class.java)
-    }
-
-    fun toVehicleVOList(vehicles: List<Vehicle>): List<VehicleVO>{
-        return vehicles.map { mapper.map(it, VehicleVO::class.java) }
-    }
-
-    fun toVehicleList(vehicleVOs: List<VehicleVO>): List<Vehicle>{
-        return vehicleVOs.map { mapper.map(it, Vehicle::class.java) }
-    }
-
-    fun toVehicleVOWithUser(vehicle: Vehicle): VehicleVO {
-        val vehicleVO = mapper.map(vehicle, VehicleVO::class.java)
-        vehicle.user?.let {
-            vehicleVO.user = mapper.map(it, UserVO::class.java)
-        }
-        return vehicleVO
-    }
-
-    fun toVehicleSummaryDTOList(vehicles: List<Vehicle>): List<VehicleSummaryDTO> {
-        return vehicles.map {
-            VehicleSummaryDTO(
-                id = it.id,
-                modelo = it.modelo,
-                marca = it.marca,
-                ano = it.ano,
-                placa = it.placa
-            )
-        }
-    }
-
-    fun toCleanVehicleVO(vehicle: Vehicle): CleanVehicleDTO {
-        return mapper.map(vehicle, CleanVehicleDTO::class.java)
     }
 
     fun toAddress(addressVO: AddressVO): Address {

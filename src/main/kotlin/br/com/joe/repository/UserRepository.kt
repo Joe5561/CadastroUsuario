@@ -15,7 +15,4 @@ interface UserRepository : JpaRepository<User, Int> {
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.address WHERE u.cpf = :cpf")
     fun findByCpfWithAddress(@Param("cpf") cpf: String): User?
 
-    @Query("SELECT u FROM User u JOIN u.vehicles v WHERE v.placa = :placa")
-    fun findUsuarioByVeiculoPlaca(@Param("placa") placa: String): User?
-
 }
