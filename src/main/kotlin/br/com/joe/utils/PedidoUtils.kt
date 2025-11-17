@@ -55,7 +55,8 @@ class PedidoUtils {
             )
             Pair(userVO, produtosVO)
         } catch (e: Exception) {
-            throw RuntimeException("Erro ao desserializar JSON do pedido $numeroPedido: ${e.message}", e)
+            throw RuntimeException(
+                "Erro ao desserializar JSON do pedido $numeroPedido: ${e.message}", e)
         }
     }
 }
